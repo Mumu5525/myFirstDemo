@@ -1,35 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public Transform model;
-    public LayerMask groundLayer;
-    public Transform orientation;
-    Rigidbody rb;
-    Animator anim;
-    public Transform groundCheck;
-    //移动方向
-    Vector3 moveDirection;
+    NavMeshAgent agent;
+    public GameObject target;
 
-    public EnemyData data;
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        anim = GetComponentInChildren<Animator>();
+        agent = GetComponent<NavMeshAgent>();
     }
-
-    // Update is called once per frame
+    // Start is called before the first frame update
     void Update()
     {
-    
+        agent.SetDestination(target.transform.position);
     }
-
-    private void FixedUpdate()
-    {
-        
-    }
-
 }
