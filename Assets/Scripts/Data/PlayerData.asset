@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90e5f13d6e0c52f4d8fa8e22000cb540, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  speed: 3.8
+  speed: 5
   runningSpeed: 5.8
   smoothing: 0.5
-  groundCheckDistance: 0.4
   rotationSpeed: 10
