@@ -36,10 +36,20 @@ public class PlayerMove : MonoBehaviour
     
     private void MovePlayer()
     {
-        moveDirection = new Vector3(input.Move.x, 0, input.Move.y);
-        Vector3 targetSpeed = moveDirection.normalized * data.speed;
+        Camera camera = Camera.main;
+        float cameraYaw = camera.transform.eulerAngles.y;
+        Vector3 cameraForward = Quaternion.Euler(0, cameraYaw, 0) * Vector3.forward;
+        Vector3 cameraRight   = Quaternion.Euler(0, cameraYaw, 0) * Vector3.right;
+        cameraRight.y = 0;
+        cameraRight.Normalize();
+
+        Vector2 inputDir = input.Move;
+        moveDirection = (cameraForward * inputDir.y + cameraRight * inputDir.x).normalized;
+
+        Vector3 targetSpeed = moveDirection * data.speed;
         Vector3 currentSpeed = new Vector3(rb.velocity.x,0,rb.velocity.z);
         Vector3 flat = Vector3.MoveTowards(currentSpeed,targetSpeed,data.smoothing);
+
         rb.velocity = new Vector3(flat.x, rb.velocity.y, flat.z);
     }
 }

@@ -8,10 +8,13 @@ public class PlayerInputReader : MonoBehaviour
     PlayerControls controls;
     public Vector2 Move => controls.Player.Move.ReadValue<Vector2>();
     public bool Attack => controls.Player.Attack.IsPressed();
-    public bool switchP => controls.Player.SwitchWeaponPrevious.WasPerformedThisFrame()
+    public bool SwitchP => controls.Player.SwitchWeaponPrevious.WasPressedThisFrame()
                             || Mouse.current.scroll.ReadValue().y > 0f;
-    public bool switchN => controls.Player.SwitchWeaponNext.WasPerformedThisFrame()
+    public bool SwitchN => controls.Player.SwitchWeaponNext.WasPressedThisFrame()
                             || Mouse.current.scroll.ReadValue().y < 0f;
+
+    public bool TurnLeft => controls.Camera.TurnLeft.WasPressedThisFrame();
+    public bool TurnRight => controls.Camera.TurnRight.WasPressedThisFrame();
 
     void Awake() 
     {

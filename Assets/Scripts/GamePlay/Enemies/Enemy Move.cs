@@ -45,5 +45,7 @@ public class EnemyMove : MonoBehaviour
     {
         if(target != null )
             agent.SetDestination(target.transform.position);
+        Transform t = PlayerLocator.Find();
+        if (t != null) target = t.gameObject;
     }
 }

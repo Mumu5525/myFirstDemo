@@ -15,8 +15,8 @@ MonoBehaviour:
   displayName: "\u6B66\u5668"
   type: 1
   Damage: 5
-  AttackSpeed: 4
+  AttackSpeed: 20
   CriticalChance: 0
   PierceCount: 0
-  projectileSpeed: 20
+  projectileSpeed: 30
   projectileLife: 5

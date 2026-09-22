@@ -17,9 +17,9 @@ public class PlayerLook : MonoBehaviour
     void Update()
     {
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if(Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
+        if(MouseWorld.TryGetGroundPoint(mainCamera, model.position, out Vector3 hitPoint))
         {
-            Vector3 lookDir = hit.point - model .position;
+            Vector3 lookDir = hitPoint - model .position;
             lookDir.y = 0;
 
             if(lookDir != Vector3.zero)

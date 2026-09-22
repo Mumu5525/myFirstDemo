@@ -41,7 +41,7 @@ public class Projectile : MonoBehaviour
     {
         this.velocity = dir * weapon.projectileSpeed;
         this.life = weapon.projectileLife;
-        this.pierceLeft = weapon.PierceCount;
+        this.pierceLeft = weapon.pierceCount;
         this.enemyMask = mask;
         this.shooter = shooter;
         this.pool = pool;
