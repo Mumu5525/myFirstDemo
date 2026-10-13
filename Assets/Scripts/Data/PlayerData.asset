@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90e5f13d6e0c52f4d8fa8e22000cb540, type: 3}
+  m_Script: {fileID: 11500000, guid: b4cd4ef09f6539c45b3af66dc526def8, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  speed: 5
-  runningSpeed: 5.8
-  smoothing: 0.5
+  speed: 10
+  smoothing: 10
   rotationSpeed: 10
+  atk: 0
+  health: 100

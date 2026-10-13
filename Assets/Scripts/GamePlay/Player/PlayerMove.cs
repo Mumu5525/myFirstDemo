@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public Transform model;
-    public PlayerData data;
+    public CharacterData data;
     Rigidbody rb;
     Animator anim;
     GroundCheck groundCheck;

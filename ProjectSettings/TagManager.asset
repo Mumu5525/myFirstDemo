@@ -15,9 +15,9 @@ TagManager:
   - Rock
   - Terrain
   - Mountain
-  - 
-  - 
-  - 
+  - DeadEnemy
+  - projectile
+  - InvisibleWall
   - 
   - 
   - 

@@ -8,7 +8,7 @@ public class PlayerLook : MonoBehaviour
     public LayerMask groundLayer;
     Camera mainCamera;
     public Transform model;
-    public PlayerData data;
+    public CharacterData data;
 
     void Start()
     {

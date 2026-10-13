@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     Rigidbody rb;
     Vector3 velocity;
     float life;
+    float damage;
     int pierceLeft;
     LayerMask enemyMask;
     Transform shooter;
@@ -26,13 +27,14 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.transform == shooter) return;
+        if(other.transform == shooter || other.transform.IsChildOf(shooter)) return;
         bool isEnemy = (enemyMask.value & (1 << other.gameObject.layer)) != 0;
         if (isEnemy)
         {
             if (pierceLeft <= 0) pool.Return(this);
             else pierceLeft--;
             Debug.Log("命中" + other.name);
+            other.GetComponentInParent<Health>()?.TakeDamage(damage);
         }
         else pool.Return(this);
     }
@@ -41,6 +43,7 @@ public class Projectile : MonoBehaviour
     {
         this.velocity = dir * weapon.projectileSpeed;
         this.life = weapon.projectileLife;
+        this.damage = weapon.damage;
         this.pierceLeft = weapon.pierceCount;
         this.enemyMask = mask;
         this.shooter = shooter;

@@ -7,7 +7,7 @@ public class PlayerAttack : MonoBehaviour
     ObjectPool<Projectile> pool;
     public Projectile prefab;
     public WeaponData[] weaponData;
-    public PlayerData playerData;
+    public CharacterData playerData;
     public Transform model;
     public LayerMask enemylayer;
     float nextAttackTime;
@@ -19,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
     {
         input = GetComponent<PlayerInputReader>();
         Transform parent = new GameObject("projectiles").transform;
-        pool = new ObjectPool<Projectile>(prefab, 10, parent);
+        pool = new ObjectPool<Projectile>(prefab, 1, parent);
     }
 
     void Update()
@@ -54,7 +54,6 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    //TODO : 近战攻击
     void MeleeAttack(WeaponData weapon)
     {
         Vector3 center = model.position + Vector3.up;
@@ -79,8 +78,11 @@ public class PlayerAttack : MonoBehaviour
             }
         }
 
-        Debug.Log($"近战！命中 {validHits.Count} 个目标，伤害：" + weapon.damage);
-        foreach (var h in validHits) Debug.Log("  - " + h.name);
+        Debug.Log($"近战！命中 {validHits.Count} 个目标");
+        foreach (var h in validHits)
+        {
+            h.GetComponentInParent<Health>()?.TakeDamage(weapon.damage);
+        } 
     }
 
     void RangedAttack(WeaponData weapon)
@@ -92,7 +94,7 @@ public class PlayerAttack : MonoBehaviour
         Projectile p = pool.Get();
         p.transform.position = muzzle;
         p.transform.rotation = Quaternion.LookRotation(dir);
-        p.Launch(dir, weapon, enemylayer, model, pool);
+        p.Launch(dir, weapon, enemylayer, transform, pool);
     }
 
     //TODO: 切换武器
