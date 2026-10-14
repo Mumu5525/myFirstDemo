@@ -6329,7 +6329,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4864
-  m_UseGeometry: 0
+  m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
   m_IgnoreNavMeshAgent: 1
@@ -43318,7 +43318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae7a1aa9e0ac0144291076dc89925643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2099644170201889739, guid: 8cb12248bb19fb340aec7b9678bdb79d, type: 3}
+  prefab: {fileID: 3108851043691956725, guid: a677698138514854dba9bfceda1dddb9, type: 3}
   weaponData:
   - {fileID: 11400000, guid: 6e7e84d8869bb8c409a7f4078abc8a83, type: 2}
   - {fileID: 11400000, guid: a34e7dac1546b8942b603779608fc200, type: 2}

@@ -75,6 +75,7 @@ public class WaveManager : MonoBehaviour
         } while (count > 0);
     }
 
+    public LayerMask obstacleMask;
     Vector3 GetSpawnPosition()
     {
         for (int i = 0; i < 30; i++)   // 最多试 30 次
@@ -83,7 +84,8 @@ public class WaveManager : MonoBehaviour
             Vector3 candidate = player.position + new Vector3(random.x, 0, random.y);
 
             if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, spawnRadius, NavMesh.AllAreas)
-                && IsOutsideCamera(hit.position))
+                && IsOutsideCamera(hit.position)
+                && !Physics.CheckSphere(hit.position, 1f, obstacleMask))
                 return hit.position;
         }
         return player.position;   // 兜底（理论上到不了这里）

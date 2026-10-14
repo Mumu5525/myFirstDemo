@@ -18,6 +18,6 @@ MonoBehaviour:
   attackSpeed: 20
   criticalChance: 0
   pierceCount: 10
-  projectileSpeed: 30
-  projectileLife: 5
+  projectileSpeed: 100
+  projectileLife: 2
   meleeRange: 0

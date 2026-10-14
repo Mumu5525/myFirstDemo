@@ -1,45 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Projectile : MonoBehaviour
 {
-    Rigidbody rb;
     Vector3 velocity;
     float life;
     float damage;
     int pierceLeft;
+    Vector3 lastPosition;
     LayerMask enemyMask;
     Transform shooter;
+    TrailRenderer Trail;
     ObjectPool<Projectile> pool;
+
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        Trail = GetComponent<TrailRenderer>();
+        lastPosition = transform.position;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-       rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
-       life -= Time.fixedDeltaTime; 
-       if(life <= 0f) pool.Return(this);
-    }
+        Vector3 currentPosition = lastPosition + velocity * Time.fixedDeltaTime;
+        Vector3 direction = currentPosition - lastPosition;
+        float distance = direction.magnitude;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.transform == shooter || other.transform.IsChildOf(shooter)) return;
-        bool isEnemy = (enemyMask.value & (1 << other.gameObject.layer)) != 0;
-        if (isEnemy)
+        if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, enemyMask))
         {
-            if (pierceLeft <= 0) pool.Return(this);
-            else pierceLeft--;
-            Debug.Log("命中" + other.name);
-            other.GetComponentInParent<Health>()?.TakeDamage(damage);
+            if (hit.transform != shooter && !hit.transform.IsChildOf(shooter))
+            {
+                hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage);
+                Debug.Log("命中" + hit.collider.name);
+
+                if (pierceLeft <= 0)
+                {
+                    pool.Return(this);
+                    return;
+                }
+                else
+                {
+                    pierceLeft--;
+                }
+            }
         }
-        else pool.Return(this);
+
+        transform.position = currentPosition;
+        lastPosition = currentPosition;
+
+        life -= Time.fixedDeltaTime;
+        if (life <= 0f) pool.Return(this);
     }
 
-    public void Launch(Vector3 dir,WeaponData weapon, LayerMask mask, Transform shooter, ObjectPool<Projectile> pool)
+    public void Launch(Vector3 dir, WeaponData weapon, LayerMask mask, Transform shooter, ObjectPool<Projectile> pool)
     {
         this.velocity = dir * weapon.projectileSpeed;
         this.life = weapon.projectileLife;
@@ -48,5 +63,7 @@ public class Projectile : MonoBehaviour
         this.enemyMask = mask;
         this.shooter = shooter;
         this.pool = pool;
+        this.lastPosition = transform.position;
+        if(Trail != null) Trail.Clear();
     }
 }

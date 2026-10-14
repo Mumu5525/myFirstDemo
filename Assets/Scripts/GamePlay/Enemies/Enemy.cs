@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour
     public void ReSpawn(Vector3 position)
     {
         rb.position = position;         // 重新设置位置
+        agent.nextPosition = position;
+        
         Data = Instantiate(baseData);   // ← 重建副本，清掉上一局的 buff 残留
         health.Init(Data.health);       // 血量从副本读
         agent.Warp(position);           // 放到 NavMesh 上
