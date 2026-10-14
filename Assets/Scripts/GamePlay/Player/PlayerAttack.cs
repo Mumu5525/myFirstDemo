@@ -94,7 +94,7 @@ public class PlayerAttack : MonoBehaviour
         Projectile p = pool.Get();
         p.transform.position = muzzle;
         p.transform.rotation = Quaternion.LookRotation(dir);
-        p.Launch(dir, weapon, enemylayer, transform, pool);
+        p.Launch(dir, weapon, transform, pool);
     }
 
     //TODO: 切换武器

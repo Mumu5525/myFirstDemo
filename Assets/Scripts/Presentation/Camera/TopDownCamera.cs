@@ -9,7 +9,7 @@ public class TopDownCamera : MonoBehaviour
     public float pitch = 45f;           // 杆子俯仰角（越大越接近俯视）
     public float rotateSmooth = 0.15f;  // 环绕旋转平滑
     public float maxFollowSpeed = 25f;    // 追赶速度上限（越远越快，但封顶）
-    public float followSharpness = 2f;    // 速度随距离增长的急切程度
+    public float followSharpness = 1f;    // 速度随距离增长的急切程度
 
     PlayerInputReader input;
 

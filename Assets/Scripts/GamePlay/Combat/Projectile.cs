@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Projectile : MonoBehaviour
 {
@@ -11,9 +10,12 @@ public class Projectile : MonoBehaviour
     int pierceLeft;
     Vector3 lastPosition;
     LayerMask enemyMask;
+    LayerMask hitMask;
     Transform shooter;
     TrailRenderer Trail;
     ObjectPool<Projectile> pool;
+
+    bool pendingReturn; // 命中后等一帧再回收，给 Trail 留出渲染时间
 
     void Awake()
     {
@@ -21,14 +23,20 @@ public class Projectile : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
+        // 上一帧命中了，这一帧才回收，让 Trail 有时间渲染出完整轨迹
+        if (pendingReturn)
+        {
+            pool.Return(this);
+            return;
+        }
+
         Vector3 currentPosition = lastPosition + velocity * Time.fixedDeltaTime;
         Vector3 direction = currentPosition - lastPosition;
         float distance = direction.magnitude;
 
-        if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, enemyMask))
+        if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, hitMask))
         {
             // 先判断是不是发射者自己
             if (hit.transform == shooter || hit.transform.IsChildOf(shooter))
@@ -49,7 +57,11 @@ public class Projectile : MonoBehaviour
 
                     if (pierceLeft <= 0)
                     {
-                        pool.Return(this);
+                        // 停在命中点，下一帧再回收
+                        transform.position = hit.point;
+                        lastPosition = hit.point;
+                        velocity = Vector3.zero;
+                        pendingReturn = true;
                         return;
                     }
                     else
@@ -63,9 +75,12 @@ public class Projectile : MonoBehaviour
                 }
                 else
                 {
-                    // 打中墙壁/地面，直接停
+                    // 打中墙壁/地面，停在命中点，下一帧回收
                     Debug.Log("命中环境：" + hit.collider.name);
-                    pool.Return(this);
+                    transform.position = hit.point;
+                    lastPosition = hit.point;
+                    velocity = Vector3.zero;
+                    pendingReturn = true;
                     return;
                 }
             }
@@ -81,15 +96,18 @@ public class Projectile : MonoBehaviour
         if (life <= 0f) pool.Return(this);
     }
 
-    public void Launch(Vector3 dir, WeaponData weapon, LayerMask mask, Transform shooter, ObjectPool<Projectile> pool)
+    public void Launch(Vector3 dir, WeaponData weapon, Transform shooter, ObjectPool<Projectile> pool)
     {
         this.velocity = dir * weapon.projectileSpeed;
         this.life = weapon.projectileLife;
         this.damage = weapon.damage;
         this.pierceLeft = weapon.pierceCount;
-        this.enemyMask = mask;
+        this.hitMask = weapon.hitMask;
+        this.enemyMask = weapon.enemyMask;
         this.shooter = shooter;
         this.pool = pool;
+
+        this.pendingReturn = false;          // 复用时要重置
         this.lastPosition = transform.position;
         if (Trail != null) Trail.Clear();
     }

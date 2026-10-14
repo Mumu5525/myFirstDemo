@@ -21,4 +21,8 @@ public class WeaponData : ScriptableObject
 
     [Header("近战")]
     public float meleeRange;
+
+    [Header("可命中成层级")]
+    public LayerMask hitMask;
+    public LayerMask enemyMask;
 }

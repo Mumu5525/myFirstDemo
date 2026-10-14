@@ -2,9 +2,10 @@
 using UnityEngine;
 using UnityEditor;
 
-public class SetMeshColliderConvex : EditorWindow
+public class MeshColliderConvexSwitch : EditorWindow
 {
-    [MenuItem("Tools/Set MeshCollider Convex On Selection")]
+    static bool Switch = true;
+    [MenuItem("Tools/MeshCollider Convex Switch")]
     static void SetConvex()
     {
         // 获取当前选中的所有物体
@@ -23,18 +24,16 @@ public class SetMeshColliderConvex : EditorWindow
             MeshCollider[] colliders = go.GetComponentsInChildren<MeshCollider>(true);
             foreach (MeshCollider mc in colliders)
             {
-                if (!mc.convex)
-                {
                     // 记录撤销操作，方便 Ctrl+Z 回退
                     Undo.RecordObject(mc, "Set MeshCollider Convex");
-                    mc.convex = true;
+                    mc.convex = Switch;
                     EditorUtility.SetDirty(mc);
                     count++;
-                }
             }
         }
 
-        Debug.Log($"完成，共修改了 {count} 个 MeshCollider。");
+        Debug.Log($"MeshColliderConvexSwitch: 共将 {count} 个 MeshCollider设置为 {Switch} !");
+        Switch = !Switch;
     }
 }
 #endif

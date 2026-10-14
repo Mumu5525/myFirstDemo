@@ -15,9 +15,15 @@ MonoBehaviour:
   displayName: "\u6B66\u5668"
   type: 1
   damage: 25
-  attackSpeed: 20
+  attackSpeed: 17
   criticalChance: 0
-  pierceCount: 10
-  projectileSpeed: 100
-  projectileLife: 2
+  pierceCount: 0
+  projectileSpeed: 400
+  projectileLife: 1
   meleeRange: 0
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 705
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 64
