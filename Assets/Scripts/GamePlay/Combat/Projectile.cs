@@ -30,25 +30,52 @@ public class Projectile : MonoBehaviour
 
         if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, enemyMask))
         {
-            if (hit.transform != shooter && !hit.transform.IsChildOf(shooter))
+            // 先判断是不是发射者自己
+            if (hit.transform == shooter || hit.transform.IsChildOf(shooter))
             {
-                hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage);
-                Debug.Log("命中" + hit.collider.name);
+                // 忽略自己，继续飞
+                transform.position = currentPosition;
+                lastPosition = currentPosition;
+            }
+            else
+            {
+                // 判断打中的是不是敌人
+                bool isEnemy = (enemyMask.value & (1 << hit.collider.gameObject.layer)) != 0;
 
-                if (pierceLeft <= 0)
+                if (isEnemy)
                 {
-                    pool.Return(this);
-                    return;
+                    hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage);
+                    Debug.Log("命中敌人：" + hit.collider.name);
+
+                    if (pierceLeft <= 0)
+                    {
+                        pool.Return(this);
+                        return;
+                    }
+                    else
+                    {
+                        pierceLeft--;
+                        // 贯穿：从命中点稍前继续
+                        lastPosition = hit.point + direction.normalized * 0.01f;
+                        transform.position = lastPosition;
+                        return;
+                    }
                 }
                 else
                 {
-                    pierceLeft--;
+                    // 打中墙壁/地面，直接停
+                    Debug.Log("命中环境：" + hit.collider.name);
+                    pool.Return(this);
+                    return;
                 }
             }
         }
-
-        transform.position = currentPosition;
-        lastPosition = currentPosition;
+        else
+        {
+            // 没打中任何东西，正常移动
+            transform.position = currentPosition;
+            lastPosition = currentPosition;
+        }
 
         life -= Time.fixedDeltaTime;
         if (life <= 0f) pool.Return(this);
@@ -64,6 +91,6 @@ public class Projectile : MonoBehaviour
         this.shooter = shooter;
         this.pool = pool;
         this.lastPosition = transform.position;
-        if(Trail != null) Trail.Clear();
+        if (Trail != null) Trail.Clear();
     }
 }
