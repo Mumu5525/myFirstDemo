@@ -12,13 +12,13 @@ TagManager:
   - Water
   - UI
   - Enemy
-  - Rock
+  - Obstacle
   - Terrain
   - Mountain
   - DeadEnemy
   - projectile
   - InvisibleWall
-  - 
+  - Decoration
   - 
   - 
   - 

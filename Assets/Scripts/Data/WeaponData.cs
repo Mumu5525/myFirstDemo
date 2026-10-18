@@ -9,7 +9,7 @@ public class WeaponData : ScriptableObject
 {
     [Header("基础")]
     public string displayName = "武器";
-    public WeaponType type = WeaponType.Melee;
+    public WeaponType type = WeaponType.Ranged;
     public float damage = 0;
     public float attackSpeed;
     public float criticalChance;
@@ -18,6 +18,7 @@ public class WeaponData : ScriptableObject
     public int pierceCount = 1;
     public float projectileSpeed = 20f;
     public float projectileLife = 5f;
+    public Projectile projectilePrefab;
 
     [Header("近战")]
     public float meleeRange;
