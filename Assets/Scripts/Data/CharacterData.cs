@@ -15,5 +15,6 @@ public class CharacterData : ScriptableObject
     [Header("属性")]
     public float atk;
     public float health;
+    public float defense;
 
 }
