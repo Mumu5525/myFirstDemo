@@ -6,8 +6,12 @@ public class MeleeWeapon : Weapon
 {
     protected override void PerformAttack(Transform shooter)
     {
+        CharacterStats stats = GetStats(shooter);
+        float range = stats != null ? stats.GetStat(StatType.MeleeRange) : Data.meleeRange;
+        float damage = stats != null ? stats.GetStat(StatType.Damage) : Data.damage;
+
         Vector3 center = shooter.position + Vector3.up;
-        Collider[] allHits = Physics.OverlapSphere(center, Data.meleeRange, Data.enemyMask);
+        Collider[] allHits = Physics.OverlapSphere(center, range, Data.enemyMask);
 
         Vector3 forward = shooter.forward;
         forward.y = 0;
@@ -31,8 +35,8 @@ public class MeleeWeapon : Weapon
         Debug.Log($"近战！命中 {validHits.Count} 个目标");
         foreach (var h in validHits)
         {
-            h.GetComponentInParent<Health>()?.TakeDamage(Data.damage);
-        } 
+            h.GetComponentInParent<Health>()?.TakeDamage(damage);
+        }
     }
 }
 

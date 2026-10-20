@@ -15,6 +15,7 @@ public class EnemyMove : MonoBehaviour
     GroundCheck groundCheck;
     Animator anim;
     Enemy enemy;
+    CharacterStats stats;
     Transform target;
 
     void Awake()
@@ -24,13 +25,14 @@ public class EnemyMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         enemy = GetComponent<Enemy>();
+        stats = GetComponent<CharacterStats>();
     }
 
     void Start()
     {
         agent.updatePosition = false;
         agent.updateRotation = false;
-        agent.speed = enemy.Data.speed;
+        agent.speed = stats != null ? stats.GetStat(StatType.Speed) : enemy.Data.speed;
     }
     void FixedUpdate()
     {

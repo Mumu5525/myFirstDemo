@@ -15,14 +15,16 @@ public class BuffManager : MonoBehaviour
 
     void Update()
     {
-        for (int i = activeBuffs.Count - 1; i >= 0; i--)
+        // 副本遍历，防止 OnUpdate/OnRemove 回调里修改 activeBuffs 导致 Collection was modified
+        var snapshot = new List<Buff>(activeBuffs);
+        for (int i = snapshot.Count - 1; i >= 0; i--)
         {
-            var buff = activeBuffs[i];
+            var buff = snapshot[i];
             buff.Tick(Time.deltaTime, ctx);
             if (buff.IsExpired)
             {
                 buff.OnRemove(ctx);
-                activeBuffs.RemoveAt(i);
+                activeBuffs.Remove(buff);
             }
         }
     }

@@ -7,5 +7,16 @@ public enum StatType
     Damage,
     Health,
     Speed,
-    Defense
+    Defense,
+    Vulnerability,   // 易伤：受到伤害额外增加的比例（%），0~正无穷
+    AttackSpeed,
+    CriticalChance,
+    CriticalDamage,
+    ProjectileCount,
+    ProjectileSpeed,
+    ProjectileSize,
+    PierceCount,
+    MeleeRange,
+    ExplosionRadius,
+    ExplosionDamage,
 }

@@ -4,6 +4,5 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    int coin = 0;
-    Weapon[] weapons;
+    
 }

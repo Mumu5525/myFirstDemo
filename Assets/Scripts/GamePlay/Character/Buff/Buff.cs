@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Buff : MonoBehaviour
+public abstract class Buff
 {
     public string Name{ get; protected set; }
     public string Id { get; protected set; }

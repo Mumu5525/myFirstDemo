@@ -14,13 +14,14 @@ public class RangedWeapon : Weapon
 
     protected override void PerformAttack(Transform shooter)
     {
+        CharacterStats stats = GetStats(shooter);
         Vector3 dir = shooter.forward;
         dir.y = 0; dir.Normalize();
         Vector3 muzzle = shooter.position + Vector3.up + dir * 0.5f;
         Projectile p = pool.Get();
         p.transform.position = muzzle;
         p.transform.rotation = Quaternion.LookRotation(dir);
-        p.Launch(dir, Data, shooter, pool);
+        p.Launch(dir, Data, shooter, pool, stats);
     }
 }
 

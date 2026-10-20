@@ -16,5 +16,19 @@ public class CharacterData : ScriptableObject
     public float atk;
     public float health;
     public float defense;
+    public float attackSpeed = 1f;
+    public float criticalChance;
+    public float criticalDamage = 1.5f;
+
+    [Header("投射物")]
+    public float projectileCount = 1f;
+    public float projectileSpeed = 20f;
+    public float projectileSize = 1f;
+    public float pierceCount = 1f;
+    public float meleeRange = 2f;
+
+    [Header("爆炸")]
+    public float explosionRadius = 3f;
+    public float explosionDamage = 10f;
 
 }

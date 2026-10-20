@@ -96,18 +96,22 @@ public class Projectile : MonoBehaviour
         if (life <= 0f) pool.Return(this);
     }
 
-    public void Launch(Vector3 dir, WeaponData weapon, Transform shooter, ObjectPool<Projectile> pool)
+    public void Launch(Vector3 dir, WeaponData weapon, Transform shooter, ObjectPool<Projectile> pool, CharacterStats stats = null)
     {
-        this.velocity = dir * weapon.projectileSpeed;
+        float effectiveSpeed = stats != null ? stats.GetStat(StatType.ProjectileSpeed) : weapon.projectileSpeed;
+        float effectiveDamage = stats != null ? stats.GetStat(StatType.Damage) : weapon.damage;
+        int effectivePierce = stats != null ? (int)stats.GetStat(StatType.PierceCount) : weapon.pierceCount;
+
+        this.velocity = dir * effectiveSpeed;
         this.life = weapon.projectileLife;
-        this.damage = weapon.damage;
-        this.pierceLeft = weapon.pierceCount;
+        this.damage = effectiveDamage;
+        this.pierceLeft = effectivePierce;
         this.hitMask = weapon.hitMask;
         this.enemyMask = weapon.enemyMask;
         this.shooter = shooter;
         this.pool = pool;
 
-        this.pendingReturn = false;          // 复用时要重置
+        this.pendingReturn = false;          // 复用时重置
         this.lastPosition = transform.position;
         if (Trail != null) Trail.Clear();
     }
