@@ -8,7 +8,7 @@ public abstract class Weapon : MonoBehaviour
     float nextAttackTime;
 
     // 公共入口：先检查冷却，再交给子类做具体攻击
-    public void Attack(Transform shooter)
+    public void Attack(GameObject shooter)
     {
         if (Time.time < nextAttackTime) return;
 
@@ -23,6 +23,6 @@ public abstract class Weapon : MonoBehaviour
     protected CharacterStats GetStats(Transform shooter) => shooter.GetComponentInParent<CharacterStats>();
 
     // 子类各自实现：近战 / 远程
-    protected abstract void PerformAttack(Transform shooter);
+    protected abstract void PerformAttack(GameObject shooter);
 }
 

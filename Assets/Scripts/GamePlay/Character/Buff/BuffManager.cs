@@ -10,7 +10,7 @@ public class BuffManager : MonoBehaviour
 
     void Awake()
     {
-        ctx = new BuffContext { Owner = transform };
+        ctx = new BuffContext { Owner = gameObject };
     }
 
     void Update()
@@ -74,11 +74,5 @@ public class BuffManager : MonoBehaviour
     {
         foreach (var buff in activeBuffs)
             buff.CollectModifiers(stat, output, ctx);
-    }
-
-    public void DispatchEvent(GameEventType evt)
-    {
-        foreach (var buff in activeBuffs)
-            buff.OnEvent(evt, ctx);
     }
 }

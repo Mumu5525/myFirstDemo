@@ -13,6 +13,8 @@ public class WeaponData : ScriptableObject
     public float damage = 0;
     public float attackSpeed;
     public float criticalChance;
+    [Tooltip("商店基础价格")]
+    public int basePrice = 100;
 
     [Header("远程(ranged)")]
     public int pierceCount = 1;

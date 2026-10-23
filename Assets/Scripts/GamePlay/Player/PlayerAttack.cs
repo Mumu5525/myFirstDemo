@@ -39,7 +39,7 @@ public class PlayerAttack : MonoBehaviour
         Weapon weapon = weapons[currentindex];
         if (weapon == null) return;
 
-        weapon.Attack(model);
+        weapon.Attack(model.gameObject);
 
     }
 
@@ -50,12 +50,10 @@ public class PlayerAttack : MonoBehaviour
         if (input.SwitchP)
         {
             currentindex = (currentindex - 1 + count) % count;
-            Debug.Log("切换至上一把武器，当前武器：" + weapons[currentindex].Data.type);
         } 
         if (input.SwitchN)
         {
             currentindex = (currentindex + 1) % count;
-            Debug.Log("切换至下一把武器，当前武器：" + weapons[currentindex].Data.type);
         }
     }
 }

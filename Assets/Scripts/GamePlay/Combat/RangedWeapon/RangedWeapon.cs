@@ -12,12 +12,12 @@ public class RangedWeapon : Weapon
         pool = new ObjectPool<Projectile>(Data.projectilePrefab, 10, parent);
     }
 
-    protected override void PerformAttack(Transform shooter)
+    protected override void PerformAttack(GameObject shooter)
     {
-        CharacterStats stats = GetStats(shooter);
-        Vector3 dir = shooter.forward;
+        CharacterStats stats = GetStats(shooter.transform);
+        Vector3 dir = shooter.transform.forward;
         dir.y = 0; dir.Normalize();
-        Vector3 muzzle = shooter.position + Vector3.up + dir * 0.5f;
+        Vector3 muzzle = shooter.transform.position + Vector3.up + dir * 0.5f;
         Projectile p = pool.Get();
         p.transform.position = muzzle;
         p.transform.rotation = Quaternion.LookRotation(dir);

@@ -38,6 +38,18 @@ public class WaveManager : MonoBehaviour
         enemyPool = new ObjectPool<Enemy>(enemyPrefab.GetComponent<Enemy>(), baseEnemyCount, parent);
     }
 
+    void OnEnable()
+    {
+        EventBus<OnUnitDied>.Subscribe(OnEnemyDied);
+        EventBus<OnEnemyRemoved>.Subscribe(OnEnemyExpired);
+    }
+
+    void OnDisable()
+    {
+        EventBus<OnUnitDied>.Unsubscribe(OnEnemyDied);
+        EventBus<OnEnemyRemoved>.Unsubscribe(OnEnemyExpired);
+    }
+
     void Start() => StartCoroutine(WaveLoop());
 
     IEnumerator WaveLoop()
@@ -51,8 +63,6 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator RunWave(int wave)
     {
-        // int hascount = EnemyCount > maxCount ? maxCount
-        // for (int i = 0; i < count; i++) SpawnEnemy();
         baseEnemyCount = baseEnemyCount * enemyGrowth;
         yield return StartCoroutine(SpawnEnemy(baseEnemyCount));
         float timer = 0;
@@ -63,24 +73,23 @@ public class WaveManager : MonoBehaviour
         }
 
         KillAllRemaining();   // 超时清场（全打死时列表已经空了，这步无操作）
+
+        EventBus<OnWaveFinished>.Publish(new OnWaveFinished { waveNumber = wave });
     }
 
     IEnumerator SpawnEnemy(int EnemyCount)
     {
         int count = EnemyCount;
+        Transform player = PlayerLocator.Find();
+
         do
         {
             if (aliveEnemies.Count < maxCount)
             {
-
                 Enemy enemy = enemyPool.Get();
-                enemy.GetComponent<EnemyDeath>().OnExpire = () => enemyPool.Return(enemy);
-                enemy.ReSpawn(GetSpawnPosition());
+                enemy.ReSpawn(GetSpawnPosition(), player);
                 aliveEnemies.Add(enemy);
                 count--;
-                System.Action onDeath = null;
-                onDeath = () => { aliveEnemies.Remove(enemy); enemy.GetComponent<Health>().OnDeath -= onDeath; };   // 自退订，防止复用时累积
-                enemy.GetComponent<Health>().OnDeath += onDeath;
             }
             else
             {
@@ -118,34 +127,6 @@ public class WaveManager : MonoBehaviour
     {
         Ray ray = new Ray(point + Vector3.up * 100f, Vector3.down);
         return !Physics.Raycast(ray, 200f, obstacleMask);
-
-
-        // Vector3 origin = point + Vector3.up * 100f;   // 从上方 100m 往下
-        // float remaining = 200f;
-        // int crossings = 0;
-
-        // while (remaining > 0)
-        // {
-        //     // 打所有层（要同时检测地面和山体）
-        //     if (!Physics.Raycast(origin, Vector3.down, out RaycastHit hit, remaining))
-        //         break;
-
-        //     int layer = hit.collider.gameObject.layer;
-
-        //     // 打中地面 → 停止，判断奇偶
-        //     if ((terrainMask.value & (1 << layer)) != 0)
-        //         return crossings % 2 == 0;   // 偶数 = 山体外 = 可生成
-
-        //     // 打中山体 → 穿过一次
-        //     if ((obstacleMask.value & (1 << layer)) != 0)
-        //         crossings++;
-
-        //     // 从命中点再往下挪一点，继续打下一层
-        //     origin = hit.point + Vector3.down * 0.01f;
-        //     remaining -= hit.distance + 0.01f;
-        // }
-
-        // return false;   // 没打中地面，异常
     }
 
     bool IsOutsideCamera(Vector3 worldPos)
@@ -159,7 +140,25 @@ public class WaveManager : MonoBehaviour
     void KillAllRemaining()
     {
         foreach (var enemy in aliveEnemies.ToArray())
-            enemy.GetComponent<Health>().TakeDamage(99999f);   // 直接打死
-        aliveEnemies.Clear();
+            enemy.GetComponent<Health>().TakeDamage(99999f);
+        // aliveEnemies 由 OnEnemyDied handler 逐个移除，无需手动 Clear
+    }
+
+    // ─── EventBus handlers ───
+
+    bool OnEnemyDied(OnUnitDied e)
+    {
+        var enemy = e.victim.GetComponent<Enemy>();
+        if (enemy == null) return false;
+        aliveEnemies.Remove(enemy);
+        return false;
+    }
+
+    bool OnEnemyExpired(OnEnemyRemoved e)
+    {
+        var enemy = e.enemy.GetComponent<Enemy>();
+        if (enemy == null) return false;
+        enemyPool.Return(enemy);
+        return false;
     }
 }

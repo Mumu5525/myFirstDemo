@@ -17,3 +17,15 @@ MonoBehaviour:
   rotationSpeed: 10
   atk: 0
   health: 100
+  defense: 0
+  attackSpeed: 1
+  criticalChance: 0
+  criticalDamage: 1.5
+  projectileCount: 1
+  projectileSpeed: 20
+  projectileSize: 1
+  pierceCount: 1
+  meleeRange: 2
+  explosionRadius: 3
+  explosionDamage: 10
+  baseGold: 5

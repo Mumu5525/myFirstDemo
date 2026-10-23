@@ -21,12 +21,6 @@ public class AffixData : ScriptableObject
     public ModifierType modifierType = ModifierType.add;
     public float value;
 
-    // ─── 触发器词条字段（预留） ───
-    [Header("触发（behavior = Trigger 时生效）")]
-    public GameEventType triggerEvent;
-    [Tooltip("触发后执行的效果，暂时由代码判断")]
-    public string triggerEffectId;
-
     // ─── 描述 ───
     [Header("显示")]
     [TextArea(1, 3)]

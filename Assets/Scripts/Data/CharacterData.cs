@@ -31,4 +31,8 @@ public class CharacterData : ScriptableObject
     public float explosionRadius = 3f;
     public float explosionDamage = 10f;
 
+    [Header("掉落")]
+    [Tooltip("怪物被击杀时的基础金币数。注意 CharacterData 也用于玩家，玩家的 baseGold 字段无意义。")]
+    public int baseGold;
+
 }

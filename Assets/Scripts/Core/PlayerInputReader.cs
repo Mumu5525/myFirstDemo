@@ -13,9 +13,6 @@ public class PlayerInputReader : MonoBehaviour
     public bool SwitchN => controls.Player.SwitchWeaponNext.WasPressedThisFrame()
                             || Mouse.current.scroll.ReadValue().y < 0f;
 
-    public bool TurnLeft => controls.Camera.TurnLeft.WasPressedThisFrame();
-    public bool TurnRight => controls.Camera.TurnRight.WasPressedThisFrame();
-
     void Awake() 
     {
         controls = new PlayerControls();
@@ -29,5 +26,13 @@ public class PlayerInputReader : MonoBehaviour
     void OnDisable()
     {
         controls.Disable();
+    }
+
+    void Update()
+    {
+        if (controls.Camera.TurnLeft.WasPressedThisFrame())
+            EventBus<OnCameraRotate>.Publish(new OnCameraRotate(){degrees = 90f});
+        if (controls.Camera.TurnRight.WasPressedThisFrame())
+            EventBus<OnCameraRotate>.Publish(new OnCameraRotate(){degrees = -90f});
     }
 }

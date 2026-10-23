@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
     Vector3 lastPosition;
     LayerMask enemyMask;
     LayerMask hitMask;
-    Transform shooter;
+    GameObject shooter;
     TrailRenderer Trail;
     ObjectPool<Projectile> pool;
 
@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour
         if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, hitMask))
         {
             // 先判断是不是发射者自己
-            if (hit.transform == shooter || hit.transform.IsChildOf(shooter))
+            if (hit.collider.gameObject == shooter )
             {
                 // 忽略自己，继续飞
                 transform.position = currentPosition;
@@ -52,8 +52,7 @@ public class Projectile : MonoBehaviour
 
                 if (isEnemy)
                 {
-                    hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage);
-                    Debug.Log("命中敌人：" + hit.collider.name);
+                    hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage, shooter);
 
                     if (pierceLeft <= 0)
                     {
@@ -75,8 +74,6 @@ public class Projectile : MonoBehaviour
                 }
                 else
                 {
-                    // 打中墙壁/地面，停在命中点，下一帧回收
-                    Debug.Log("命中环境：" + hit.collider.name);
                     transform.position = hit.point;
                     lastPosition = hit.point;
                     velocity = Vector3.zero;
@@ -96,7 +93,7 @@ public class Projectile : MonoBehaviour
         if (life <= 0f) pool.Return(this);
     }
 
-    public void Launch(Vector3 dir, WeaponData weapon, Transform shooter, ObjectPool<Projectile> pool, CharacterStats stats = null)
+    public void Launch(Vector3 dir, WeaponData weapon, GameObject shooter, ObjectPool<Projectile> pool, CharacterStats stats = null)
     {
         float effectiveSpeed = stats != null ? stats.GetStat(StatType.ProjectileSpeed) : weapon.projectileSpeed;
         float effectiveDamage = stats != null ? stats.GetStat(StatType.Damage) : weapon.damage;

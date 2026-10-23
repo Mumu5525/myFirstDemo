@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Health : MonoBehaviour
 {
@@ -12,6 +8,7 @@ public class Health : MonoBehaviour
 
     public bool IsDead => currentHealth <= 0f;
 
+    /// <summary> 内层通知：仅自身组件使用（PlayerDeath/EnemyDeath 放布娃娃等）。实例级，不走全局广播。 </summary>
     public event System.Action OnDeath;
 
     void Awake()
@@ -25,11 +22,9 @@ public class Health : MonoBehaviour
         currentHealth = max;
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, GameObject attacker = null)
     {
         if (IsDead) return;
-
-        DispatchEvent(GameEventType.OnHit);
 
         // ─── 防御减免（衰减曲线，永远到不了 100%） ───
         float defense = stats != null ? stats.GetStat(StatType.Defense) : 0f;
@@ -45,15 +40,9 @@ public class Health : MonoBehaviour
         if (currentHealth <= 0f)
         {
             currentHealth = 0f;
-            DispatchEvent(GameEventType.OnDeath);
+            // ─── 外层通知：EventBus<OnUnitDied> 全局广播，供跨系统监听（GoldSystem/WaveManager 等） ───
+            EventBus<OnUnitDied>.Publish(new OnUnitDied { victim = gameObject, killer = attacker });
             OnDeath?.Invoke();
         }
     }
-
-    void DispatchEvent(GameEventType evt)
-    {
-        GetComponent<BuffManager>()?.DispatchEvent(evt);
-        GetComponent<AffixManager>()?.DispatchEvent(evt);
-    }
 }
-

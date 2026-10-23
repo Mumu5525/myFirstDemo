@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class MeleeWeapon : Weapon
 {
-    protected override void PerformAttack(Transform shooter)
+    protected override void PerformAttack(GameObject shooter)
     {
-        CharacterStats stats = GetStats(shooter);
+        CharacterStats stats = GetStats(shooter.transform);
         float range = stats != null ? stats.GetStat(StatType.MeleeRange) : Data.meleeRange;
         float damage = stats != null ? stats.GetStat(StatType.Damage) : Data.damage;
 
-        Vector3 center = shooter.position + Vector3.up;
+        Vector3 center = shooter.transform.position + Vector3.up;
         Collider[] allHits = Physics.OverlapSphere(center, range, Data.enemyMask);
 
-        Vector3 forward = shooter.forward;
+        Vector3 forward = shooter.transform.forward;
         forward.y = 0;
         forward.Normalize();
 
@@ -35,7 +35,11 @@ public class MeleeWeapon : Weapon
         Debug.Log($"近战！命中 {validHits.Count} 个目标");
         foreach (var h in validHits)
         {
-            h.GetComponentInParent<Health>()?.TakeDamage(damage);
+            // TODO: 接入 Buff/护盾 拦截伤害时，改为：
+            //   var e = new BeforeUnitHit { rawDamage = damage, finalDamage = damage };
+            //   EventBus<BeforeUnitHit>.Publish(e);
+            //   h.GetComponentInParent<Health>()?.TakeDamage(e.finalDamage, shooter);
+            h.GetComponentInParent<Health>()?.TakeDamage(damage, shooter);
         }
     }
 }

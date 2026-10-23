@@ -16,7 +16,6 @@ public class EnemyMove : MonoBehaviour
     Animator anim;
     Enemy enemy;
     CharacterStats stats;
-    Transform target;
 
     void Awake()
     {
@@ -53,12 +52,12 @@ public class EnemyMove : MonoBehaviour
     {
         anim.SetFloat("Speed",rb.velocity.magnitude);
         anim.SetFloat("AnimationSpeed", rb.velocity.magnitude/4.5f);
-        if(target == null) target = PlayerLocator.Find();
-        if(target != null && agent.enabled)
+
+        Transform target = enemy.Target;
+        if (target != null && agent.enabled)
         {
             agent.SetDestination(target.position);
         }
-            
     }
 
     void FaceMoveDirection()

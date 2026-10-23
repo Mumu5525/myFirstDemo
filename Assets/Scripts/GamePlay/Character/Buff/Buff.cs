@@ -32,9 +32,6 @@ public abstract class Buff
     // StatModifier 里带 类型(加法/乘法/覆盖) 和 数值
     public virtual void CollectModifiers(StatType stat, List<StatModifier> output, BuffContext ctx) { }
 
-    // ---- 事件钩子：默认不处理 ----
-    public virtual void OnEvent(GameEventType evt, BuffContext ctx) { }
-
     // ---- 驱动：由 BuffManager 每帧调用 ----
     public void Tick(float dt, BuffContext ctx)
     {

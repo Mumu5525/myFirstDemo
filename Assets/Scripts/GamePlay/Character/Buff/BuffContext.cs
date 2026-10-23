@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class BuffContext
 {
-    public Transform Owner;
+    public GameObject Owner;
 }

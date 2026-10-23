@@ -8,6 +8,9 @@ public class Enemy : MonoBehaviour
     public CharacterData baseData;                 // SO 模板（Inspector 拖）
     public CharacterData Data { get; private set; } // 运行时副本，buff 改这个
 
+    /// <summary> 当前追踪目标（仅移动用），由生成方注入 </summary>
+    public Transform Target { get; set; }
+
     Health health;
     RagDoll ragdoll;
     EnemyDeath death;
@@ -25,8 +28,10 @@ public class Enemy : MonoBehaviour
     }
 
     // 对象池复用的统一入口
-    public void ReSpawn(Vector3 position)
+    public void ReSpawn(Vector3 position, Transform target = null)
     {
+        Target = target;
+
         rb.position = position;         // 重新设置位置
         agent.nextPosition = position;
         

@@ -11,29 +11,35 @@ public class TopDownCamera : MonoBehaviour
     public float maxFollowSpeed = 25f;    // 追赶速度上限（越远越快，但封顶）
     public float followSharpness = 1f;    // 速度随距离增长的急切程度
 
-    PlayerInputReader input;
-
     Vector3 orbitCenter;      // 环绕中心（平滑跟着玩家）
-    Vector3 centerVelocity;
     float yaw;                // 当前环绕角
     float targetYaw;
     float yawVelocity;
 
     void Awake()
     {
-        input = GetComponent<PlayerInputReader>();
+        if (target == null) target = PlayerLocator.Find();
         if (target != null) orbitCenter = target.position;
     }
 
-    void Update()
+    void OnEnable()
     {
-        if (input.TurnLeft)  targetYaw -= 90f;
-        if (input.TurnRight) targetYaw += 90f;
+        EventBus<OnCameraRotate>.Subscribe(Rotate);
+    }
+
+    void OnDisable()
+    {
+        EventBus<OnCameraRotate>.Unsubscribe(Rotate);
+    }
+
+    bool Rotate(OnCameraRotate e)
+    {
+        targetYaw += e.degrees;
+        return false;
     }
 
     void LateUpdate()
     {
-        if (target == null) target = PlayerLocator.Find();
         if (target == null) return;
 
         // 1. 环绕中心平滑跟随玩家

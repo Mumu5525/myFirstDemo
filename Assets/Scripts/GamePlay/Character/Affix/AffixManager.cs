@@ -13,7 +13,7 @@ public class AffixManager : MonoBehaviour
 
     void Awake()
     {
-        ctx = new AffixContext { Owner = transform };
+        ctx = new AffixContext { Owner = gameObject };
     }
 
     // ─── 装备 / 卸下 ───
@@ -51,14 +51,6 @@ public class AffixManager : MonoBehaviour
     {
         foreach (var affix in activeAffixes)
             affix.CollectModifiers(stat, output);
-    }
-
-    // ─── 事件分发 ───
-
-    public void DispatchEvent(GameEventType evt)
-    {
-        foreach (var affix in activeAffixes)
-            affix.OnEvent(evt, ctx);
     }
 
     // ─── 查询 ───

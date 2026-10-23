@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +11,16 @@ public class EnemyDeath : MonoBehaviour
     RagDoll rd;
     Health health;
 
-    public Action OnExpire;
-
     public float ragdollDuration = 3.5f;
 
-    void OnEnable() => health.OnDeath += HandleDeath;
-    void OnDisable() => health.OnDeath -= HandleDeath;
+    void OnEnable()
+    {
+        health.OnDeath += HandleDeath;
+    }
+    void OnDisable()
+    {
+        health.OnDeath -= HandleDeath;
+    }
 
 
     void Awake()
@@ -39,6 +42,6 @@ public class EnemyDeath : MonoBehaviour
     IEnumerator ReturnAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        OnExpire?.Invoke();
+        EventBus<OnEnemyRemoved>.Publish(new OnEnemyRemoved { enemy = gameObject, wasKilled = true });
     }
 }

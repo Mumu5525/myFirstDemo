@@ -28,11 +28,6 @@ public abstract class Affix
     /// 纯属性词条重写这个就够了。
     /// </summary>
     public abstract void CollectModifiers(StatType stat, List<StatModifier> output);
-
-    /// <summary>
-    /// 事件响应钩子。触发型词条可选重写。
-    /// </summary>
-    public virtual void OnEvent(GameEventType evt, AffixContext ctx) { }
 }
 
 /// <summary>
