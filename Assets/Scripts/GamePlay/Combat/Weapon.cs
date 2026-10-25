@@ -1,28 +1,34 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    public WeaponData Data;
+    WeaponData data;
+    List<Affix> affixes;
+
+    /// <summary> 武器数据（运行时设置，只读）。 </summary>
+    public WeaponData Data => data;
+    /// <summary> 此武器携带的词条，在装备/卸下时用于增删 AffixManager。 </summary>
+    public List<Affix> Affixes => affixes;
     float nextAttackTime;
 
-    // 公共入口：先检查冷却，再交给子类做具体攻击
+    /// <summary> 初始化武器数据和词条（由 Shop 等生成方调用）。 </summary>
+    public void Setup(WeaponData weaponData, List<Affix> weaponAffixes)
+    {
+        data = weaponData;
+        affixes = weaponAffixes;
+    }
+
     public void Attack(GameObject shooter)
     {
         if (Time.time < nextAttackTime) return;
 
-        // 从 shooter 身上找 CharacterStats，有 buff/affix 就用修正后的攻速
         CharacterStats stats = shooter.GetComponentInParent<CharacterStats>();
-        float effectiveAtkSpeed = stats != null ? stats.GetStat(StatType.AttackSpeed) : Data.attackSpeed;
+        float charBonus = stats != null ? stats.GetStat(StatType.AttackSpeed) : 0f;
+        float effectiveAtkSpeed = Data.attackSpeed + charBonus;
         nextAttackTime = Time.time + 1f / effectiveAtkSpeed;
-        PerformAttack(shooter);   // 子类实现
+        PerformAttack(shooter, stats);
     }
 
-    /// <summary> 从 shooter 查找 CharacterStats，供子类读取被 buff/affix 修正后的属性 </summary>
-    protected CharacterStats GetStats(Transform shooter) => shooter.GetComponentInParent<CharacterStats>();
-
-    // 子类各自实现：近战 / 远程
-    protected abstract void PerformAttack(GameObject shooter);
+    protected abstract void PerformAttack(GameObject shooter, CharacterStats stats);
 }
-

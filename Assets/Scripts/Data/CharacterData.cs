@@ -32,7 +32,10 @@ public class CharacterData : ScriptableObject
     public float explosionDamage = 10f;
 
     [Header("掉落")]
-    [Tooltip("怪物被击杀时的基础金币数。注意 CharacterData 也用于玩家，玩家的 baseGold 字段无意义。")]
     public int baseGold;
+
+    [Header("玩家专用")]
+    public int initialGold = 100;
+    public int maxWeaponSlots = 2;
 
 }

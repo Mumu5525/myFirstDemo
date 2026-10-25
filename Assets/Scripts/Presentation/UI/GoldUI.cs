@@ -1,35 +1,41 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
-/// 金币显示 UI。挂在包含 Text 的 GameObject 上，自动绑定玩家钱包。
+/// 金币显示 UI。挂在包含 TextMeshProUGUI 的 GameObject 上，自动绑定玩家钱包。
 /// </summary>
 public class GoldUI : MonoBehaviour
 {
-    [SerializeField] Text goldText;
+    [SerializeField] TextMeshProUGUI goldText;
     PlayerInventory inventory;
 
     void Start()
     {
         if (goldText == null)
-            goldText = GetComponent<Text>();
+            goldText = GetComponent<TextMeshProUGUI>();
 
         if (goldText == null)
-            Debug.LogError("[GoldUI] 没找到 Text 组件！请确保挂在了有 Text 的 GameObject 上");
+        {
+            Debug.LogError("[GoldUI] 没找到 TextMeshProUGUI 组件！");
+            return;
+        }
 
         var player = PlayerLocator.Find();
         if (player == null)
-            Debug.LogError("[GoldUI] 没找到玩家！请确保 Player 的 Tag 设为 Player");
-        else
-            inventory = player.GetComponent<PlayerInventory>();
-
-        if (inventory == null)
-            Debug.LogError("[GoldUI] 玩家身上没有 PlayerInventory 组件！");
-        else
         {
-            inventory.OnGoldChanged += UpdateDisplay;
-            UpdateDisplay(inventory.Gold);
+            Debug.LogError("[GoldUI] 没找到玩家！Tag 是否设为 Player？");
+            return;
         }
+
+        inventory = player.GetComponent<PlayerInventory>();
+        if (inventory == null)
+        {
+            Debug.LogError("[GoldUI] 玩家身上没有 PlayerInventory 组件！");
+            return;
+        }
+
+        inventory.OnGoldChanged += UpdateDisplay;
+        UpdateDisplay(inventory.Gold);
     }
 
     void OnDestroy()

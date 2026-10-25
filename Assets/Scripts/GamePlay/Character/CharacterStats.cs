@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BuffManager))]
+[RequireComponent(typeof(AffixManager))]
 public class CharacterStats : MonoBehaviour
 {
     [SerializeField] CharacterData data;
     [SerializeField] BuffManager buffManager;
     [SerializeField] AffixManager affixManager;
 
-    List<StatModifier> modifierCache = new List<StatModifier>();
+    List<StatModifier> modifierCache = new();
 
     void Awake()
     {
@@ -17,15 +19,20 @@ public class CharacterStats : MonoBehaviour
             affixManager = GetComponent<AffixManager>();
     }
 
+    /// <summary> 返回原始 CharacterData（供 Inventory 读初始值等） </summary>
+    public CharacterData GetRawData() => data;
+
+    // ─── 三合一求值 ───
+
     float GetBaseValue(StatType stat)
     {
         switch (stat)
         {
             case StatType.Damage:           return data.atk;
-            case StatType.Health:           return data.health;
+            case StatType.MaxHealth:           return data.health;
             case StatType.Speed:            return data.speed;
             case StatType.Defense:          return data.defense;
-            case StatType.Vulnerability:    return 0f;               // 易伤来自 debuff，没有基础值
+            case StatType.Vulnerability:    return 0f;
             case StatType.AttackSpeed:      return data.attackSpeed;
             case StatType.CriticalChance:   return data.criticalChance;
             case StatType.CriticalDamage:   return data.criticalDamage;
@@ -40,39 +47,32 @@ public class CharacterStats : MonoBehaviour
         }
     }
 
-    float CalculateFinal(StatType stat, float baseValue)
+    /// <summary> 三合一：base + affix + buff </summary>
+    public float GetStat(StatType stat)
     {
-        modifierCache.Clear();
+        // 防御性懒加载：Awake 顺序不确定时也能正常工作
+        if (buffManager == null)
+            buffManager = GetComponent<BuffManager>();
+        if (affixManager == null)
+            affixManager = GetComponent<AffixManager>();
 
-        buffManager.CollectModifiers(stat, modifierCache);
+        float baseValue = GetBaseValue(stat);
+        modifierCache.Clear();
+        if (buffManager != null)
+            buffManager.CollectModifiers(stat, modifierCache);
         if (affixManager != null)
             affixManager.CollectModifiers(stat, modifierCache);
 
-        float addSum = 0f;
-        float mulSum = 0f;
-        float divProduct = 1f;
-
+        float addSum = 0f, mulSum = 0f, divProduct = 1f;
         foreach (var m in modifierCache)
         {
             switch (m.type)
             {
-                case ModifierType.add:
-                    addSum += m.value;
-                    break;
-                case ModifierType.multiply:
-                    mulSum += m.value;
-                    break;
-                case ModifierType.divide:
-                    divProduct *= m.value;
-                    break;
+                case ModifierType.add:      addSum += m.value; break;
+                case ModifierType.multiply: mulSum += m.value; break;
+                case ModifierType.divide:   divProduct *= m.value; break;
             }
         }
-
         return Mathf.Max(0f, (baseValue + addSum) * (1f + mulSum) / divProduct);
-    }
-
-    public float GetStat(StatType stat)
-    {
-        return CalculateFinal(stat, GetBaseValue(stat));
     }
 }

@@ -8,52 +8,52 @@ using UnityEngine;
 public class AffixManager : MonoBehaviour
 {
     readonly List<Affix> activeAffixes = new();
+    public int Count => activeAffixes.Count;
 
-    AffixContext ctx;
+    /// <summary> 词条变更时触发。关心属性变化的系统（Health 等）订阅此事件。 </summary>
+    public event System.Action OnAffixesChanged;
 
-    void Awake()
-    {
-        ctx = new AffixContext { Owner = gameObject };
-    }
-
-    // ─── 装备 / 卸下 ───
-
-    /// <summary> 装备一件武器：只替换武器来源的旧词条，遗物词条保留 </summary>
     public void EquipWeapon(List<Affix> newAffixes)
     {
-        activeAffixes.RemoveAll(a => a.Source == AffixSource.Weapon);
+        if (newAffixes == null) return;
         foreach (var a in newAffixes) a.Source = AffixSource.Weapon;
         activeAffixes.AddRange(newAffixes);
+        OnAffixesChanged?.Invoke();                       // ① 先通知 → Health 同步 MaxHealth
+        foreach (var a in newAffixes) a.OnEquip(gameObject); // ② 再调钩子，此时 MaxHealth 已最新
     }
 
-    public void UnequipWeapon()
+    public void UnequipWeapon(List<Affix> affixes)
     {
-        activeAffixes.RemoveAll(a => a.Source == AffixSource.Weapon);
+        if (affixes == null) return;
+        foreach (var a in affixes)
+            if (a.Source == AffixSource.Weapon)
+                activeAffixes.Remove(a);
+        OnAffixesChanged?.Invoke();
+        foreach (var a in affixes) a.OnUnequip(gameObject);
     }
 
-    /// <summary> 拾取遗物：加入常驻词条 </summary>
     public void EquipRelic(List<Affix> newAffixes)
     {
+        if (newAffixes == null) return;
         foreach (var a in newAffixes) a.Source = AffixSource.Relic;
         activeAffixes.AddRange(newAffixes);
+        OnAffixesChanged?.Invoke();
+        foreach (var a in newAffixes) a.OnEquip(gameObject);
     }
 
-    /// <summary> 移除指定遗物词条 </summary>
     public void UnequipRelic(Affix affix)
     {
-        if (affix.Source == AffixSource.Relic)
-            activeAffixes.Remove(affix);
+        if (affix == null) return;
+        if (affix.Source == AffixSource.Relic && activeAffixes.Remove(affix))
+        {
+            OnAffixesChanged?.Invoke();
+            affix.OnUnequip(gameObject);
+        }
     }
-
-    // ─── 属性收集 ───
 
     public void CollectModifiers(StatType stat, List<StatModifier> output)
     {
         foreach (var affix in activeAffixes)
             affix.CollectModifiers(stat, output);
     }
-
-    // ─── 查询 ───
-
-    public int Count => activeAffixes.Count;
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public enum StatType 
 {
     Damage,
-    Health,
+    MaxHealth,
     Speed,
     Defense,
     Vulnerability,   // 易伤：受到伤害额外增加的比例（%），0~正无穷

@@ -2,29 +2,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 玩家背包（MonoBehaviour）。挂在玩家身上。
-/// 整合金币、武器（最多2把）、遗物（无上限）。
+/// 玩家背包。掌管金币、武器、遗物。
+/// 武器切换也在此处理（需要 PlayerInputReader）。
 /// </summary>
+[RequireComponent(typeof(PlayerInputReader))]
 public class PlayerInventory : MonoBehaviour
 {
-    [Header("初始金币")]
-    public int startGold = 0;
+    PlayerInputReader input;
+    AffixManager affixManager;
 
     // ─── 金币 ───
 
     public int Gold { get; private set; }
     public event System.Action<int> OnGoldChanged;
 
-
-    void Awake()
-    {
-        Gold = startGold;
-    }
-
-    /// <summary> 加钱。由 GoldSystem 在敌人被玩家击杀后调用。 </summary>
     public void AddGold(int amount)
     {
-        Debug.Log($"AddGold调用");
         if (amount <= 0) return;
         Gold += amount;
         OnGoldChanged?.Invoke(Gold);
@@ -41,33 +34,65 @@ public class PlayerInventory : MonoBehaviour
 
     // ─── 武器 ───
 
-    const int MaxWeapons = 2;
-
-    ItemEntry[] weapons = new ItemEntry[MaxWeapons];
-    int weaponCount;
-
-    public int WeaponCount => weaponCount;
-    public int MaxWeaponSlots => MaxWeapons;
+    [field: SerializeField]
+    public Weapon[] Weapons { get; private set; }
+    public int CurrentIndex { get; private set; }
+    public Weapon CurrentWeapon
+        => (Weapons.Length > 0 && Weapons[CurrentIndex] != null) ? Weapons[CurrentIndex] : null;
+    public int WeaponCount => CountWeapons();
+    public int MaxWeaponSlots { get; private set; }
     public event System.Action OnWeaponsChanged;
 
-    public ItemEntry GetWeapon(int index)
+    public bool CanAddWeapon() => WeaponCount < MaxWeaponSlots;
+
+    void Update()
     {
-        return index >= 0 && index < MaxWeapons ? weapons[index] : null;
+        if (WeaponCount <= 1) return;
+        if (input.SwitchN) CycleNext();
+        if (input.SwitchP) CyclePrev();
     }
 
-    public bool CanAddWeapon() => weaponCount < MaxWeapons;
-
-    public bool AddWeapon(ItemEntry item)
+    void CycleNext()
     {
-        if (item == null || item.kind != ItemEntry.Kind.Weapon) return false;
+        for (int i = 1; i <= MaxWeaponSlots; i++)
+        {
+            int next = (CurrentIndex + i) % MaxWeaponSlots;
+            if (Weapons[next] != null) { CurrentIndex = next; return; }
+        }
+    }
+
+    void CyclePrev()
+    {
+        for (int i = 1; i <= MaxWeaponSlots; i++)
+        {
+            int prev = (CurrentIndex - i + MaxWeaponSlots) % MaxWeaponSlots;
+            if (Weapons[prev] != null) { CurrentIndex = prev; return; }
+        }
+    }
+
+    int CountWeapons()
+    {
+        int c = 0;
+        foreach (var w in Weapons) if (w != null) c++;
+        return c;
+    }
+
+    /// <summary> 添加武器。词条从 weapon.Affixes 路由到 AffixManager。 </summary>
+    public bool AddWeapon(Weapon weapon)
+    {
+        if (weapon == null) return false;
         if (!CanAddWeapon()) return false;
 
-        for (int i = 0; i < MaxWeapons; i++)
+        for (int i = 0; i < Weapons.Length; i++)
         {
-            if (weapons[i] == null)
+            if (Weapons[i] == null)
             {
-                weapons[i] = item;
-                weaponCount++;
+                Weapons[i] = weapon;
+                affixManager?.EquipWeapon(weapon.Affixes);
+
+                if (CurrentWeapon == null)
+                    CurrentIndex = i;
+
                 OnWeaponsChanged?.Invoke();
                 return true;
             }
@@ -75,56 +100,86 @@ public class PlayerInventory : MonoBehaviour
         return false;
     }
 
-    /// <summary> 替换指定槽位的武器，返回被替换的旧武器（覆盖UI用） </summary>
-    public ItemEntry ReplaceWeapon(int slotIndex, ItemEntry newItem)
+    /// <summary> 替换指定槽位。 </summary>
+    public Weapon ReplaceWeapon(int slotIndex, Weapon newWeapon)
     {
-        if (slotIndex < 0 || slotIndex >= MaxWeapons) return null;
-        if (newItem == null || newItem.kind != ItemEntry.Kind.Weapon) return null;
+        if (slotIndex < 0 || slotIndex >= Weapons.Length) return null;
+        if (newWeapon == null) return null;
 
-        var old = weapons[slotIndex];
-        weapons[slotIndex] = newItem;
-        if (old == null) weaponCount++;
+        var old = Weapons[slotIndex];
+        if (old != null)
+            affixManager?.UnequipWeapon(old.Affixes);
+
+        affixManager?.EquipWeapon(newWeapon.Affixes);
+        Weapons[slotIndex] = newWeapon;
         OnWeaponsChanged?.Invoke();
         return old;
     }
 
-    public ItemEntry RemoveWeapon(int index)
+    /// <summary> 卸下武器，词条从 Weapon.Affixes 注销。 </summary>
+    public Weapon RemoveWeapon(int index)
     {
-        if (index < 0 || index >= MaxWeapons) return null;
-        var removed = weapons[index];
-        if (removed == null) return null;
-        weapons[index] = null;
-        weaponCount--;
+        if (index < 0 || index >= Weapons.Length) return null;
+        var weapon = Weapons[index];
+        if (weapon == null) return null;
+
+        affixManager?.UnequipWeapon(weapon.Affixes);
+        Weapons[index] = null;
+
+        // 如果卸下的是当前武器，找下一把
+        if (CurrentIndex == index && WeaponCount > 0)
+            CycleNext(); // next after removal
+
         OnWeaponsChanged?.Invoke();
-        return removed;
+        return weapon;
     }
 
     // ─── 遗物 ───
 
-    List<ItemEntry> relics = new();
+    class RelicSlot
+    {
+        public RelicData data;
+        public List<Affix> affixes;
+    }
+
+    List<RelicSlot> relics = new();
 
     public int RelicCount => relics.Count;
     public event System.Action OnRelicsChanged;
 
-    public ItemEntry GetRelic(int index)
-    {
-        return index >= 0 && index < relics.Count ? relics[index] : null;
-    }
+    public RelicData GetRelicData(int index)
+        => index >= 0 && index < relics.Count ? relics[index]?.data : null;
 
-    public void AddRelic(ItemEntry item)
+    public void AddRelic(RelicData data, List<Affix> affixes)
     {
-        if (item == null || item.kind != ItemEntry.Kind.Relic) return;
-        relics.Add(item);
+        if (data == null) return;
+        relics.Add(new RelicSlot { data = data, affixes = affixes });
+        affixManager?.EquipRelic(affixes);
         OnRelicsChanged?.Invoke();
     }
 
-    public bool RemoveRelic(ItemEntry item)
+    // ─── 初始化 ───
+
+    void Awake()
     {
-        if (relics.Remove(item))
-        {
-            OnRelicsChanged?.Invoke();
-            return true;
-        }
-        return false;
+        input = GetComponent<PlayerInputReader>();
+        affixManager = GetComponent<AffixManager>();
+        var charData = GetComponent<CharacterStats>()?.GetRawData();
+        Gold = charData?.initialGold ?? 0;
+        MaxWeaponSlots = charData?.maxWeaponSlots ?? 2;
+
+        // Inspector 没拖武器 → 创建空数组；拖了 → 保留
+        if (Weapons == null || Weapons.Length == 0)
+            Weapons = new Weapon[MaxWeaponSlots];
+    }
+
+    void Start()
+    {
+        // 初始武器的词条注册
+        foreach (var w in Weapons)
+            if (w != null)
+                affixManager?.EquipWeapon(w.Affixes);
+
+        OnWeaponsChanged?.Invoke();
     }
 }

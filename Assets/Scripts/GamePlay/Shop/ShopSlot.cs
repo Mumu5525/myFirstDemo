@@ -12,6 +12,9 @@ public class ShopSlot : MonoBehaviour
     /// <summary> 玩家点击购买按钮时触发，Shop 订阅此事件来处理购买逻辑 </summary>
     public event System.Action<ShopSlot> OnBuyRequested;
 
+    /// <summary> 锁定状态变化时触发，UI 订阅此事件更新锁图标 </summary>
+    public event System.Action<bool> OnLockToggled;
+
     /// <summary> Shop 调用此方法填充商品 </summary>
     public void SetItem(ItemEntry newItem)
     {
@@ -28,6 +31,7 @@ public class ShopSlot : MonoBehaviour
     public void ToggleLock()
     {
         IsLocked = !IsLocked;
+        OnLockToggled?.Invoke(IsLocked);
     }
 
     /// <summary> UI 按钮绑定此方法 </summary>

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 纯属性修正词条：装备后永久给角色加一项属性修正。
-/// 行为由 AffixData 中的 (statType, modifierType, value) 决定。
+/// 行为由 (statType, modifierType, value) 决定。
 /// </summary>
 public class StatAffix : Affix
 {
@@ -22,4 +23,13 @@ public class StatAffix : Affix
         if (stat == targetStat)
             output.Add(modifier);
     }
+
+    /// <summary> 装备时：无。 </summary>
+    public override void OnEquip(GameObject owner)
+    {
+        
+    }
+
+    /// <summary> 卸下时无需处理：Manager 已先刷新了 MaxHealth。 </summary>
+    public override void OnUnequip(GameObject owner) { }
 }

@@ -108,7 +108,6 @@ public class WaveManager : MonoBehaviour
 
             if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, spawnRadius, NavMesh.AllAreas))
             {
-                Debug.Log($"候选={candidate}  吸附={hit.position}  可生成={IsSpawnable(hit.position)}");
                 if (IsOutsideCamera(hit.position))
                 {
                     if(IsSpawnable(hit.position))

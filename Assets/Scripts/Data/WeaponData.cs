@@ -10,6 +10,7 @@ public class WeaponData : ScriptableObject
     [Header("基础")]
     public string displayName = "武器";
     public WeaponType type = WeaponType.Ranged;
+    public GameObject weaponPrefab;  // 武器组件所在的 Prefab（商店购买时实例化用）
     public float damage = 0;
     public float attackSpeed;
     public float criticalChance;

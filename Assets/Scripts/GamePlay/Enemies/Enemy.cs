@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
         agent.nextPosition = position;
         
         Data = Instantiate(baseData);   // ← 重建副本，清掉上一局的 buff 残留
-        health.Init(Data.health);       // 血量从副本读
+        health.Reset();                 // 血量从 CharacterStats 读取
         agent.Warp(position);           // 放到 NavMesh 上
         agent.enabled = true;
         ragdoll.Disable();              // 退出布娃娃

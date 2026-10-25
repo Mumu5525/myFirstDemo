@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -14,8 +12,7 @@ public class Projectile : MonoBehaviour
     GameObject shooter;
     TrailRenderer Trail;
     ObjectPool<Projectile> pool;
-
-    bool pendingReturn; // 命中后等一帧再回收，给 Trail 留出渲染时间
+    bool pendingReturn;
 
     void Awake()
     {
@@ -25,12 +22,7 @@ public class Projectile : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 上一帧命中了，这一帧才回收，让 Trail 有时间渲染出完整轨迹
-        if (pendingReturn)
-        {
-            pool.Return(this);
-            return;
-        }
+        if (pendingReturn) { pool.Return(this); return; }
 
         Vector3 currentPosition = lastPosition + velocity * Time.fixedDeltaTime;
         Vector3 direction = currentPosition - lastPosition;
@@ -38,25 +30,19 @@ public class Projectile : MonoBehaviour
 
         if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, hitMask))
         {
-            // 先判断是不是发射者自己
-            if (hit.collider.gameObject == shooter )
+            if (hit.collider.gameObject == shooter)
             {
-                // 忽略自己，继续飞
                 transform.position = currentPosition;
                 lastPosition = currentPosition;
             }
             else
             {
-                // 判断打中的是不是敌人
                 bool isEnemy = (enemyMask.value & (1 << hit.collider.gameObject.layer)) != 0;
-
                 if (isEnemy)
                 {
                     hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage, shooter);
-
                     if (pierceLeft <= 0)
                     {
-                        // 停在命中点，下一帧再回收
                         transform.position = hit.point;
                         lastPosition = hit.point;
                         velocity = Vector3.zero;
@@ -66,7 +52,6 @@ public class Projectile : MonoBehaviour
                     else
                     {
                         pierceLeft--;
-                        // 贯穿：从命中点稍前继续
                         lastPosition = hit.point + direction.normalized * 0.01f;
                         transform.position = lastPosition;
                         return;
@@ -84,7 +69,6 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            // 没打中任何东西，正常移动
             transform.position = currentPosition;
             lastPosition = currentPosition;
         }
@@ -95,20 +79,20 @@ public class Projectile : MonoBehaviour
 
     public void Launch(Vector3 dir, WeaponData weapon, GameObject shooter, ObjectPool<Projectile> pool, CharacterStats stats = null)
     {
-        float effectiveSpeed = stats != null ? stats.GetStat(StatType.ProjectileSpeed) : weapon.projectileSpeed;
-        float effectiveDamage = stats != null ? stats.GetStat(StatType.Damage) : weapon.damage;
-        int effectivePierce = stats != null ? (int)stats.GetStat(StatType.PierceCount) : weapon.pierceCount;
+        float charSpeed = stats != null ? stats.GetStat(StatType.ProjectileSpeed) : 0f;
+        float charDmg = stats != null ? stats.GetStat(StatType.Damage) : 0f;
+        float charPierce = stats != null ? stats.GetStat(StatType.PierceCount) : 0f;
 
-        this.velocity = dir * effectiveSpeed;
+        this.velocity = dir * (weapon.projectileSpeed + charSpeed);
         this.life = weapon.projectileLife;
-        this.damage = effectiveDamage;
-        this.pierceLeft = effectivePierce;
+        this.damage = weapon.damage + charDmg;
+        this.pierceLeft = weapon.pierceCount + (int)charPierce;
         this.hitMask = weapon.hitMask;
         this.enemyMask = weapon.enemyMask;
         this.shooter = shooter;
         this.pool = pool;
 
-        this.pendingReturn = false;          // 复用时重置
+        this.pendingReturn = false;
         this.lastPosition = transform.position;
         if (Trail != null) Trail.Clear();
     }
