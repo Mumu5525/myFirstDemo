@@ -91,7 +91,7 @@ public class AffixPool : ScriptableObject
         var usedStats = new HashSet<StatType>();
 
         // 从高 Tier 往低 Tier 尝试，凑够 count
-        for (int t = (int)AffixTier.T5; t >= (int)minTier && result.Count < count; t--)
+        for (int t = (int)AffixTier.T6; t >= (int)minTier && result.Count < count; t--)
         {
             var tier = (AffixTier)t;
             if (!byTier.TryGetValue(tier, out var list) || list.Count == 0) continue;

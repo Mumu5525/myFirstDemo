@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerDeath : MonoBehaviour
 {
     Health health;
-    PlayerMove move;
+    PlayerController move;
     RagDoll rd;
 
     void OnEnable() => health.OnDeath += HandleDeath;
@@ -16,7 +16,7 @@ public class PlayerDeath : MonoBehaviour
     void Awake()
     {
         health = GetComponent<Health>();
-        move = GetComponent<PlayerMove>();
+        move = GetComponent<PlayerController>();
         rd = GetComponent<RagDoll>();
     }
 

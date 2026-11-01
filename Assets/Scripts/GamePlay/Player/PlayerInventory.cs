@@ -168,9 +168,15 @@ public class PlayerInventory : MonoBehaviour
         Gold = charData?.initialGold ?? 0;
         MaxWeaponSlots = charData?.maxWeaponSlots ?? 2;
 
-        // Inspector 没拖武器 → 创建空数组；拖了 → 保留
+        // Inspector 没拖武器 → 创建空数组；拖了但数量不足 → 扩到槽位上限
         if (Weapons == null || Weapons.Length == 0)
             Weapons = new Weapon[MaxWeaponSlots];
+        else if (Weapons.Length < MaxWeaponSlots)
+        {
+            var resized = new Weapon[MaxWeaponSlots];
+            Weapons.CopyTo(resized, 0);
+            Weapons = resized;
+        }
     }
 
     void Start()

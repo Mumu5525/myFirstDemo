@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be61a5bdcfbf5e5439e42b229262f8a7, type: 3}
+  m_Name: LootTable
+  m_EditorClassIdentifier: 
+  weaponPool:
+  - {fileID: 11400000, guid: a34e7dac1546b8942b603779608fc200, type: 2}
+  relicPool:
+  - {fileID: 11400000, guid: 91f0953aa1843524d8d20c969223ef20, type: 2}
+  - {fileID: 11400000, guid: 0892a8acc17c9504db2fea60c407c2e8, type: 2}
+  - {fileID: 11400000, guid: 72dea84879ab1c7469a45e35d038e05c, type: 2}
+  - {fileID: 11400000, guid: fcecfe6231bc7bd43bb3d4f235c965f5, type: 2}
+  affixPool: {fileID: 11400000, guid: 7596086e5764e9a4898e6b8842bdbed5, type: 2}
+  rarityWeights:
+  - tier: 1
+    baseWeight: 50
+    perLevelBonus: -4
+  - tier: 2
+    baseWeight: 25
+    perLevelBonus: 0
+  - tier: 3
+    baseWeight: 15
+    perLevelBonus: 3
+  - tier: 4
+    baseWeight: 8
+    perLevelBonus: 5
+  - tier: 5
+    baseWeight: 0
+    perLevelBonus: 1
+  - tier: 6
+    baseWeight: 0
+    perLevelBonus: 0.3

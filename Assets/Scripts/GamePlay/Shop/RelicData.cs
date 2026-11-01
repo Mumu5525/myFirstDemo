@@ -17,6 +17,8 @@ public class RelicData : ScriptableObject
     }
 
     public string displayName = "遗物";
+    [Tooltip("商店 UI 显示的图标")]
+    public Sprite icon;
     [TextArea(1, 3)]
     public string description;
     [Tooltip("基础价格，商店根据品质进一步调价")]

@@ -23,12 +23,12 @@ public class ShopData : ScriptableObject
     public int maxLevel = 10;
 
     [Header("武器品质价格倍率")]
-    [Tooltip("暂定：basePrice × 倍率（下标 0 不用，1=T1，5=T5）")]
-    public float[] qualityPriceMultipliers = new float[] { 0, 1f, 1.5f, 2f, 3f, 4f };
+    [Tooltip("暂定：basePrice × 倍率（下标 0 不用，1=T1，6=T6）")]
+    public float[] qualityPriceMultipliers = new float[] { 0, 1f, 1.5f, 2f, 3f, 4f, 5.5f };
 
     [Header("词条附加价格（按 Tier）")]
-    [Tooltip("暂定：每个词条的附加价格（下标 0 不用，1=T1，5=T5）")]
-    public int[] affixTierPrices = new int[] { 0, 10, 20, 35, 50, 100 };
+    [Tooltip("暂定：每个词条的附加价格（下标 0 不用，1=T1，6=T6）")]
+    public int[] affixTierPrices = new int[] { 0, 10, 20, 35, 50, 100, 160 };
 
     /// <summary> 根据锁定数量获取本次刷新费用 </summary>
     public int GetRefreshCost(int lockedCount)

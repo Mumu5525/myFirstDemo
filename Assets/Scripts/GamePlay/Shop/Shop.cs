@@ -110,10 +110,19 @@ public class Shop : MonoBehaviour
 
         var item = slot.item;
 
-        if (item.kind == ItemEntry.Kind.Weapon && !inventory.CanAddWeapon())
+        if (item.kind == ItemEntry.Kind.Weapon)
         {
-            Debug.Log("武器槽已满");
-            return;
+            if (!inventory.CanAddWeapon())
+            {
+                Debug.Log("武器槽已满");
+                return;
+            }
+            // 先检查再扣钱：否则金币扣了、武器却生成不出来
+            if (item.weaponData == null || item.weaponData.weaponPrefab == null)
+            {
+                Debug.LogError($"[Shop] {item.DisplayName} 没有配置 weaponPrefab，无法购买");
+                return;
+            }
         }
 
         if (!inventory.SpendGold(item.price))
@@ -128,6 +137,10 @@ public class Shop : MonoBehaviour
             DeliverRelic(item);
 
         slot.Clear();
+
+        // 购买后重置锁定：否则刷新会跳过锁定槽，导致该槽永久空置
+        if (slot.IsLocked) slot.ToggleLock();
+
         OnItemPurchased?.Invoke(item);
     }
 
@@ -139,11 +152,6 @@ public class Shop : MonoBehaviour
         var weaponObj = Instantiate(prefab, inventory.transform);
         var weapon = weaponObj.GetComponent<Weapon>();
         weapon.Setup(item.weaponData, item.affixes);
-        if (prefab == null)
-        {
-            Debug.LogError($"[Shop] {item.weaponData.displayName} 没有 weaponPrefab！");
-            return;
-        }
 
         inventory.AddWeapon(weapon);
     }

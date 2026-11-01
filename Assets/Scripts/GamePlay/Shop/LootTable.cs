@@ -36,6 +36,7 @@ public class LootTable : ScriptableObject
         new() { tier = AffixTier.T3, baseWeight = 15, perLevelBonus =  3 },
         new() { tier = AffixTier.T4, baseWeight =  8, perLevelBonus =  5 },
         new() { tier = AffixTier.T5, baseWeight =  0, perLevelBonus =  1 },
+        new() { tier = AffixTier.T6, baseWeight =  0, perLevelBonus =  0.3f },
     };
 
     /// <summary> 根据品质等级和品质目标，获取当前权重 </summary>

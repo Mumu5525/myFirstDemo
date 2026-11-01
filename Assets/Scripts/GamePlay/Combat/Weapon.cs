@@ -3,10 +3,10 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    WeaponData data;
+    [SerializeField] WeaponData data;
     List<Affix> affixes;
 
-    /// <summary> 武器数据（运行时设置，只读）。 </summary>
+    /// <summary> 武器数据。Inspector 可预置（初始武器），Shop 生成时会用 Setup 覆盖。 </summary>
     public WeaponData Data => data;
     /// <summary> 此武器携带的词条，在装备/卸下时用于增删 AffixManager。 </summary>
     public List<Affix> Affixes => affixes;

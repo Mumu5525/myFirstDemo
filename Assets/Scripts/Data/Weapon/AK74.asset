@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: AK74
   m_EditorClassIdentifier: 
   displayName: AK74
+  icon: {fileID: 21300000, guid: c980f9c3a2feb81428412e38ff3f5df9, type: 3}
   type: 1
+  weaponPrefab: {fileID: 7708880658047418143, guid: 1b4bdf02c63a02d448751c53ec3ffb32, type: 3}
   damage: 100
   attackSpeed: 17
   criticalChance: 0
+  basePrice: 100
   pierceCount: 20
   projectileSpeed: 400
   projectileLife: 1

@@ -61,13 +61,13 @@ public static class LootGenerator
     static AffixTier RollRarity(LootTable table, int quality)
     {
         float total = 0f;
-        for (int t = 1; t <= 5; t++)
+        for (int t = (int)AffixTier.T1; t <= (int)AffixTier.T6; t++)
             total += table.GetWeight((AffixTier)t, quality);
 
         float roll = Random.Range(0f, total);
         float cumulative = 0f;
 
-        for (int t = 5; t >= 1; t--)
+        for (int t = (int)AffixTier.T6; t >= (int)AffixTier.T1; t--)
         {
             cumulative += table.GetWeight((AffixTier)t, quality);
             if (roll <= cumulative) return (AffixTier)t;
