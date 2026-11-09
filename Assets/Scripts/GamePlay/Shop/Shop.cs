@@ -36,6 +36,8 @@ public class Shop : MonoBehaviour
         EventBus<OnWaveFinished>.Unsubscribe(OnWaveFinished);
     }
 
+    // ─── 货架 ───
+
     // ─── 波次结束：免费刷新 ───
 
     bool OnWaveFinished(OnWaveFinished e)
@@ -214,4 +216,5 @@ public class Shop : MonoBehaviour
         float multiplier = data.qualityPriceMultipliers[(int)tier];
         return Mathf.RoundToInt(rd.price * multiplier);
     }
+
 }

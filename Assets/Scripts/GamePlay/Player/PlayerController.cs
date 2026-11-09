@@ -9,9 +9,7 @@ public class PlayerController : MonoBehaviour
     Animator anim;
     GroundCheck groundCheck;
     PlayerInputReader input;
-    [SerializeField] CharacterData data;
-
-    public Transform model;
+    [SerializeField] PlayerData data;
 
     void Awake()
     {
@@ -60,17 +58,17 @@ public class PlayerController : MonoBehaviour
     {
         //获取相机方向
         Camera camera = Camera.main;
-        
-        Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if(MouseWorld.TryGetGroundPoint(camera, model.position, out Vector3 hitPoint))  
+        Ray ray = camera.ScreenPointToRay(input.MousePosition);
+        if(MouseWorld.TryGetGroundPoint(camera, transform.position, out Vector3 hitPoint))  
         {
-            Vector3 lookDir = hitPoint - model .position;
+            Vector3 lookDir = hitPoint - transform.position;
             lookDir.y = 0;
 
             if(lookDir != Vector3.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(lookDir);
-                model.rotation = Quaternion.Slerp(model.rotation, targetRotation, data.rotationSpeed * Time.deltaTime);
+                Quaternion slerpRptation = Quaternion.Slerp(transform.rotation, targetRotation, data.rotationSpeed * Time.deltaTime);
+                rb.MoveRotation(slerpRptation);
             }
         }
     }
@@ -79,7 +77,7 @@ public class PlayerController : MonoBehaviour
     {
         //计算动画参数
         Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        Vector3 localVel = model.InverseTransformDirection(flatVel);
+        Vector3 localVel = transform.InverseTransformDirection(flatVel);
 
         //更新动画参数
         anim.SetFloat("HorizontalSpeed", localVel.x, 0.1f, Time.deltaTime);

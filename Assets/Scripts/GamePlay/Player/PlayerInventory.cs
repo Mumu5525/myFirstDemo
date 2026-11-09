@@ -164,9 +164,9 @@ public class PlayerInventory : MonoBehaviour
     {
         input = GetComponent<PlayerInputReader>();
         affixManager = GetComponent<AffixManager>();
-        var charData = GetComponent<CharacterStats>()?.GetRawData();
-        Gold = charData?.initialGold ?? 0;
-        MaxWeaponSlots = charData?.maxWeaponSlots ?? 2;
+        var playerData = GetComponent<CharacterStats>()?.GetRawData<PlayerData>();
+        Gold = playerData?.initialGold ?? 0;
+        MaxWeaponSlots = playerData?.maxWeaponSlots ?? 2;
 
         // Inspector 没拖武器 → 创建空数组；拖了但数量不足 → 扩到槽位上限
         if (Weapons == null || Weapons.Length == 0)

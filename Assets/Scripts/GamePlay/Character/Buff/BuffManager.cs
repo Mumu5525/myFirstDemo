@@ -65,6 +65,13 @@ public class BuffManager : MonoBehaviour
             RemoveBuff(buff);
     }
 
+    public void Reset()
+    {
+        foreach (var buff in activeBuffs)
+            buff.OnRemove(ctx);
+        activeBuffs.Clear();
+    }
+
     public bool HasBuff(string id)
     {
         return activeBuffs.Exists(b => b.Id == id);

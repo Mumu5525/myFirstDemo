@@ -11,13 +11,6 @@ public struct OnRunStateChanged { public bool isRunning; }
 /// <summary> 一波结束 </summary>
 public struct OnWaveFinished { public int waveNumber; }
 
-/// <summary> 任意单位死亡（敌人或玩家） </summary>
-public struct OnAnyDeath
-{
-    public GameObject victim;
-    public GameObject killer;
-}
-
 /// <summary> 相机旋转输入（+90° 或 -90°） </summary>
 public struct OnCameraRotate { public float degrees; }
 

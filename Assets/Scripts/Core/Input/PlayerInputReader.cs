@@ -12,7 +12,7 @@ public class PlayerInputReader : MonoBehaviour
                             || Mouse.current.scroll.ReadValue().y > 0f;
     public bool SwitchN => controls.Player.SwitchWeaponNext.WasPressedThisFrame()
                             || Mouse.current.scroll.ReadValue().y < 0f;
-
+    public Vector2 MousePosition => controls.Player.MousePosition.ReadValue<Vector2>();
     void Awake() 
     {
         controls = new PlayerControls();

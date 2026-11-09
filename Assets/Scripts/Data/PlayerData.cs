@@ -1,0 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "PlayerData", menuName = "Data/PlayerData")]
+public class PlayerData : CharacterData
+{
+    public int initialGold = 0;
+    public int maxWeaponSlots = 2;
+}

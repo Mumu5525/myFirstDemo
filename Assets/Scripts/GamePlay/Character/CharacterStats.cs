@@ -21,6 +21,7 @@ public class CharacterStats : MonoBehaviour
 
     /// <summary> 返回原始 CharacterData（供 Inventory 读初始值等） </summary>
     public CharacterData GetRawData() => data;
+    public T GetRawData<T>() where T : CharacterData => data as T;
 
     // ─── 三合一求值 ───
 
@@ -74,5 +75,10 @@ public class CharacterStats : MonoBehaviour
             }
         }
         return Mathf.Max(0f, (baseValue + addSum) * (1f + mulSum) / divProduct);
+    }
+
+    public void ClearBuff()
+    {
+        buffManager.Reset();
     }
 }
