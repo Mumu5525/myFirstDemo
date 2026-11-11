@@ -112,12 +112,6 @@ public class Shop : MonoBehaviour
 
         var item = slot.item;
 
-        if (!inventory.SpendGold(item.price))
-        {
-            Debug.Log("金币不足");
-            return;
-        }
-
         if (item.kind == ItemEntry.Kind.Weapon)
         {
             if (!inventory.CanAddWeapon())
@@ -131,6 +125,12 @@ public class Shop : MonoBehaviour
                 Debug.LogError($"[Shop] {item.DisplayName} 没有配置 weaponPrefab，无法购买");
                 return;
             }
+        }
+
+        if (!inventory.SpendGold(item.price))
+        {
+            Debug.Log("金币不足");
+            return;
         }
 
         if (item.kind == ItemEntry.Kind.Weapon)
