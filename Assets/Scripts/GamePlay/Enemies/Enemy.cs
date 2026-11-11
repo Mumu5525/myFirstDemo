@@ -35,11 +35,14 @@ public class Enemy : MonoBehaviour
         Target = target;
         Stats.ClearBuff();
         Rb.position = position;         // 重新设置位置
-        Agent.nextPosition = position;
         Health.Reset();                 // 血量从 CharacterStats 读取
+        Agent.nextPosition = position;
         Agent.Warp(position);           // 放到 NavMesh 上
         Agent.enabled = true;
-        Ragdoll.Disable();              // 退出布娃娃
+        Ragdoll.Disable();              // 退出布娃娃（这里才会把 Animator 重新启用）
+        Anim.Rebind();                  // 重置到默认状态；不会触发 OnStateExit，所以复位攻击要单独做
+        Anim.Update(0f);
+        GetComponent<EnemyAttack>()?.EndAttack();   // 兜底：清掉上一次残留的攻击表现
         LayerSetter.Set(transform, LayerMask.NameToLayer("Enemy"));
     }
 }

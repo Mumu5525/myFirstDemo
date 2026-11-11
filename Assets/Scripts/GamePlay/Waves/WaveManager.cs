@@ -139,7 +139,7 @@ public class WaveManager : MonoBehaviour
     void KillAllRemaining()
     {
         foreach (var enemy in aliveEnemies.ToArray())
-            enemy.GetComponent<Health>().TakeDamage(99999f);
+            DamageCalculator.DealDamage(null, enemy.gameObject, 99999f);
         // aliveEnemies 由 OnEnemyDied handler 逐个移除，无需手动 Clear
     }
 

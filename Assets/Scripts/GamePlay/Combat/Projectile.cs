@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
                 bool isEnemy = (enemyMask.value & (1 << hit.collider.gameObject.layer)) != 0;
                 if (isEnemy)
                 {
-                    hit.collider.gameObject.GetComponentInParent<Health>()?.TakeDamage(damage, shooter);
+                    DamageCalculator.DealDamage(shooter, hit.collider.gameObject, damage);
                     if (pierceLeft <= 0)
                     {
                         transform.position = hit.point;

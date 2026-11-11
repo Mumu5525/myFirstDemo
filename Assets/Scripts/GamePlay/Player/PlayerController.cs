@@ -56,6 +56,9 @@ public class PlayerController : MonoBehaviour
 
     void PlayerRotate()
     {
+        //朝向完全由代码控制，清掉碰撞产生的角冲量，避免与 MoveRotation 打架
+        rb.angularVelocity = Vector3.zero;
+
         //获取相机方向
         Camera camera = Camera.main;
         Ray ray = camera.ScreenPointToRay(input.MousePosition);
@@ -67,7 +70,7 @@ public class PlayerController : MonoBehaviour
             if(lookDir != Vector3.zero)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(lookDir);
-                Quaternion slerpRptation = Quaternion.Slerp(transform.rotation, targetRotation, data.rotationSpeed * Time.deltaTime);
+                Quaternion slerpRptation = Quaternion.Slerp(rb.rotation, targetRotation, data.rotationSpeed * Time.deltaTime);
                 rb.MoveRotation(slerpRptation);
             }
         }

@@ -28,6 +28,7 @@ public class EnemyDeath : MonoBehaviour
     void HandleDeath()
     {
         enemy.Agent.enabled = false;
+        GetComponent<EnemyAttack>()?.EndAttack();   // 死亡会停掉 Animator，OnStateExit 不会再回调
         LayerSetter.Set(transform, LayerMask.NameToLayer("DeadEnemy"));
         enemy.Ragdoll.Enable();
         StartCoroutine(ReturnAfterDelay(ragdollDuration));

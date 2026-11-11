@@ -33,6 +33,6 @@ public class MeleeWeapon : Weapon
         }
 
         foreach (var h in validHits)
-            h.GetComponentInParent<Health>()?.TakeDamage(damage, shooter);
+            DamageCalculator.DealDamage(shooter, h.gameObject, damage);
     }
 }
