@@ -25,7 +25,7 @@ public abstract class Weapon : MonoBehaviour
 
         CharacterStats stats = shooter.GetComponentInParent<CharacterStats>();
         float charBonus = stats != null ? stats.GetStat(StatType.AttackSpeed) : 0f;
-        float effectiveAtkSpeed = Data.attackSpeed + charBonus;
+        float effectiveAtkSpeed = Data.attackSpeed * charBonus;
         nextAttackTime = Time.time + 1f / effectiveAtkSpeed;
         PerformAttack(shooter, stats);
     }

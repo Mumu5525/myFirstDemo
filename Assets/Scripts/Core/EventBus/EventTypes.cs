@@ -18,22 +18,41 @@ public struct OnCameraRotate { public float degrees; }
 // Phase 2+ 预定义的事件（暂不接入，先留好 struct）
 // ──────────────────────────────────────────────
 
+
+/// <summary> 单位被治疗 </summary>
+public struct OnUnitHealed
+{
+    public GameObject target;
+    public float amount;
+}
+
 /// <summary> 单位受到伤害前（可用于 Buff/护盾修改伤害值） </summary>
 public struct BeforeUnitHit
 {
     public GameObject victim;
     public GameObject attacker;
-    public float rawDamage;
-    public float finalDamage;   // handler 可以修改此字段
+    public DamageType type;
+    public float damage;
+    public bool isCritical;   // handler 可以修改此字段
 }
 
+/// <summary> 单位受到伤害时 </summary>
+public struct OnUnitHit
+{
+    public GameObject victim;
+    public GameObject attacker;
+    public DamageType type;
+    public float damage;
+    public bool isCritical;
+}
 ////// <summary> 单位受到伤害后（可用于 Buff 防止后续伤害/反伤等其他事件） </summary>
 public struct AfterUnitHit
 {
     public GameObject victim;
     public GameObject attacker;
-    public float rawDamage;
-    public float finalDamage;
+    public DamageType type;
+    public float damage;
+    public bool isCritical;
 }
 
 /// <summary> 单位即将死亡（返回 true 可阻止死亡，如护盾/复活） </summary>

@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
                 bool isEnemy = (enemyMask.value & (1 << hit.collider.gameObject.layer)) != 0;
                 if (isEnemy)
                 {
-                    DamageCalculator.DealDamage(shooter, hit.collider.gameObject, damage);
+                    DamageCalculator.DealDamage(shooter, hit.collider.gameObject, damage, scaling: DamageScaling.Ranged);
                     if (pierceLeft <= 0)
                     {
                         transform.position = hit.point;
@@ -80,12 +80,11 @@ public class Projectile : MonoBehaviour
     public void Launch(Vector3 dir, WeaponData weapon, GameObject shooter, ObjectPool<Projectile> pool, CharacterStats stats = null)
     {
         float charSpeed = stats != null ? stats.GetStat(StatType.ProjectileSpeed) : 0f;
-        float charDmg = stats != null ? stats.GetStat(StatType.Damage) : 0f;
         float charPierce = stats != null ? stats.GetStat(StatType.PierceCount) : 0f;
 
         this.velocity = dir * (weapon.projectileSpeed + charSpeed);
         this.life = weapon.projectileLife;
-        this.damage = weapon.damage + charDmg;
+        this.damage = weapon.damage;   // 补在 life 赋值旁边
         this.pierceLeft = weapon.pierceCount + (int)charPierce;
         this.hitMask = weapon.hitMask;
         this.enemyMask = weapon.enemyMask;

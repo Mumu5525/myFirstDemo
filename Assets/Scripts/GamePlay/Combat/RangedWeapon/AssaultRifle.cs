@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RangedWeapon : Weapon
+public class AssaultRifle : Weapon
 {
     ObjectPool<Projectile> pool;
     Transform poolParent;

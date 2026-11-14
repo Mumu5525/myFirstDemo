@@ -29,8 +29,9 @@ public class CharacterStats : MonoBehaviour
     {
         switch (stat)
         {
-            case StatType.Damage:           return data.atk;
-            case StatType.MaxHealth:           return data.health;
+            case StatType.MeleeDamage:      return data.meleeDamage;
+            case StatType.RangedDamage:     return data.rangedDamage;
+            case StatType.MaxHealth:        return data.maxHealth;
             case StatType.Speed:            return data.speed;
             case StatType.Defense:          return data.defense;
             case StatType.Vulnerability:    return 0f;

@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public Transform model;
+    [SerializeField] Weapon fistWeapon;   // 没有装备武器时的兜底，不占武器槽
+
     PlayerInputReader input;
     PlayerInventory inventory;
 
@@ -17,6 +19,7 @@ public class PlayerAttack : MonoBehaviour
     void FixedUpdate()
     {
         if (!input.Attack) return;
-        inventory.CurrentWeapon?.Attack(model.gameObject);
+        Weapon weapon = inventory.CurrentWeapon ?? fistWeapon;
+        weapon?.Attack(model.gameObject);
     }
 }

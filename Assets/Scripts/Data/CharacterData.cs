@@ -11,8 +11,9 @@ public class CharacterData : ScriptableObject
     public float rotationSpeed = 10f;
 
     [Header("Stats")]
-    public float atk;
-    public float health;
+    public float meleeDamage;    // 近战伤害加成（基础伤害来自武器/敌人数据）
+    public float rangedDamage;   // 远程伤害加成
+    public float maxHealth = 100f;
     public float defense;
     public float attackSpeed = 1f;
     public float criticalChance;

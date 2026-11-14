@@ -12,6 +12,7 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] LayerMask targetMask = 1 << 3;              // 目标层，默认 Player
     [SerializeField] float attackRange = 1.2f;                    // 扇形半径
     [SerializeField, Range(0f, 360f)] float attackAngle = 120f;   // 扇形总角度
+    [SerializeField] float baseDamage = 10f;                      // 基础伤害，角色加成在 DamageCalculator 里叠加
 
     AttackSectorVisual sector;
     bool struck;   // 本次攻击是否已经结算过命中，防止命中帧被重复触发
@@ -73,7 +74,6 @@ public class EnemyAttack : MonoBehaviour
     void DetectHit()
     {
         Vector3 origin = transform.position + Vector3.up;
-        float damage = enemy.Stats.GetStat(StatType.Damage);
 
         Collider[] hits = Physics.OverlapSphere(origin, attackRange, targetMask, QueryTriggerInteraction.Ignore);
         foreach (var other in hits)
@@ -83,8 +83,7 @@ public class EnemyAttack : MonoBehaviour
             if (toTarget.sqrMagnitude > attackRange * attackRange) continue;
             if (Vector3.Angle(transform.forward, toTarget) > attackAngle * 0.5f) continue;
 
-            Debug.Log($"{other.name} 被攻击了");
-            DamageCalculator.DealDamage(enemy.gameObject, other.gameObject, damage);
+            DamageCalculator.DealDamage(enemy.gameObject, other.gameObject, baseDamage, scaling: DamageScaling.Melee);
         }
     }
 }

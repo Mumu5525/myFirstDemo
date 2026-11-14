@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackBehaviour : StateMachineBehaviour
 {
-    [Range(0f, 1f)] public float hitTime = 0.24f;   // 命中帧在 clip 中的归一化位置
+    [Range(0f, 1f)] public float hitTime = 0.4f;   // 命中帧在 clip 中的归一化位置
 
     // 注意：StateMachineBehaviour 实例被所有使用该控制器的 Animator 共享，
     // 不能缓存 EnemyAttack，每次都要从传入的 animator 上取

@@ -8,10 +8,6 @@ public class MeleeWeapon : Weapon
         float charRange = stats != null ? stats.GetStat(StatType.MeleeRange) : 0f;
         float range = Data.meleeRange + charRange;
 
-        // 伤害 = 武器基础 + 角色加成（含词条 + Buff）
-        float charDmg = stats != null ? stats.GetStat(StatType.Damage) : 0f;
-        float damage = Data.damage + charDmg;
-
         Vector3 center = shooter.transform.position + Vector3.up;
         Collider[] allHits = Physics.OverlapSphere(center, range, Data.enemyMask);
 
@@ -33,6 +29,6 @@ public class MeleeWeapon : Weapon
         }
 
         foreach (var h in validHits)
-            DamageCalculator.DealDamage(shooter, h.gameObject, damage);
+            DamageCalculator.DealDamage(shooter, h.gameObject, Data.damage, scaling: DamageScaling.Melee);
     }
 }
