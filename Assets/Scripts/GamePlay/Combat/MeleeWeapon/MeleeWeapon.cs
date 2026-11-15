@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class MeleeWeapon : Weapon
 {
-    protected override void PerformAttack(GameObject shooter, CharacterStats stats)
+    protected override void PerformAttack(GameObject shooter, CharacterStats stats, Vector3 aimpoint)
     {
         float charRange = stats != null ? stats.GetStat(StatType.MeleeRange) : 0f;
         float range = Data.meleeRange + charRange;

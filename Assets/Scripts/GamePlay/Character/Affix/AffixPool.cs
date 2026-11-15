@@ -119,9 +119,15 @@ public class AffixPool : ScriptableObject
         return data.behavior switch
         {
             AffixBehavior.Stat => new StatAffix(
-                data.id, data.displayName, data.tier, 
+                data.id, data.displayName, data.tier,
                 data.statType, data.modifierType, data.value),
+
             // AffixBehavior.Trigger => ...  // 将来扩展
+
+            AffixBehavior.OnHit => data.onHitEffect != null
+                ? new OnHitAffix(data.id, data.displayName, data.tier, data.onHitEffect)
+                : null,
+        
             _ => null
         };
     }

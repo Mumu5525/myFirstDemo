@@ -17,18 +17,25 @@ public abstract class Weapon : MonoBehaviour
     {
         data = weaponData;
         affixes = weaponAffixes;
+        OnSetup();
     }
 
-    public void Attack(GameObject shooter)
+    public void Attack(GameObject shooter, Vector3 aimPoint, bool pressedThisFrame, bool held)
     {
         if (Time.time < nextAttackTime) return;
+        
+        bool wantsFire = Data.triggerMode == TriggerMode.SemiAutomatic
+            ? pressedThisFrame
+            : held;
+        if(!wantsFire) return;
 
         CharacterStats stats = shooter.GetComponentInParent<CharacterStats>();
-        float charBonus = stats != null ? stats.GetStat(StatType.AttackSpeed) : 0f;
+        float charBonus = stats != null ? stats.GetStat(StatType.AttackSpeed) : 1f;
         float effectiveAtkSpeed = Data.attackSpeed * charBonus;
-        nextAttackTime = Time.time + 1f / effectiveAtkSpeed;
-        PerformAttack(shooter, stats);
+        nextAttackTime = Time.time + 1f / Mathf.Max(0.01f, effectiveAtkSpeed);
+        PerformAttack(shooter, stats, aimPoint);
     }
 
-    protected abstract void PerformAttack(GameObject shooter, CharacterStats stats);
+    protected virtual void OnSetup() { }
+    protected abstract void PerformAttack(GameObject shooter, CharacterStats stats, Vector3 aimPoint);
 }

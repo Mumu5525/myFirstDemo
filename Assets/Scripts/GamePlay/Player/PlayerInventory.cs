@@ -11,6 +11,9 @@ public class PlayerInventory : MonoBehaviour
     PlayerInputReader input;
     AffixManager affixManager;
 
+    [Tooltip("武器挂载位置")]
+    [SerializeField] Transform weaponMount;
+
     // ─── 金币 ───
 
     public int Gold { get; private set; }
@@ -90,8 +93,18 @@ public class PlayerInventory : MonoBehaviour
                 Weapons[i] = weapon;
                 affixManager?.EquipWeapon(weapon.Affixes);
 
+                //将武器挂载到手上
+                if(weaponMount != null)
+                {
+                    weapon.transform.SetParent(weaponMount);
+                    weapon.transform.localPosition = Vector3.zero;
+                    weapon.transform.localRotation = Quaternion.identity;
+                }
+
                 if (CurrentWeapon == null)
                     CurrentIndex = i;
+                
+                RefreshWeaponVisibility();
 
                 OnWeaponsChanged?.Invoke();
                 return true;
@@ -99,6 +112,14 @@ public class PlayerInventory : MonoBehaviour
         }
         return false;
     }
+
+    void RefreshWeaponVisibility()
+{
+    for (int i = 0; i < Weapons.Length; i++)
+        if (Weapons[i] != null)
+            Weapons[i].gameObject.SetActive(i == CurrentIndex);
+}
+
 
     /// <summary> 替换指定槽位。 </summary>
     public Weapon ReplaceWeapon(int slotIndex, Weapon newWeapon)

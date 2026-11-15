@@ -21,4 +21,5 @@ public enum StatType
     ExplosionRadius,
     ExplosionDamage,
     RangedDamage,    // 远程伤害加成
+    SpreadAngle      //散射角加成(度), 负数 = 更精准
 }

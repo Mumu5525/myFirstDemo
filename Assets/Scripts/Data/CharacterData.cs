@@ -26,6 +26,7 @@ public class CharacterData : ScriptableObject
     public float projectileSpeed = 20f;
     public float projectileSize = 1f;
     public float pierceCount = 1f;
+    public float spreadAngle;
 
     [Header("Melee")]
     public float meleeRange = 2f;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -6,13 +7,15 @@ public class Projectile : MonoBehaviour
     float life;
     float damage;
     int pierceLeft;
+    bool pendingReturn;
     Vector3 lastPosition;
     LayerMask enemyMask;
     LayerMask hitMask;
     GameObject shooter;
     TrailRenderer Trail;
     ObjectPool<Projectile> pool;
-    bool pendingReturn;
+    List<OnHitEffect> onHitEffects;
+    
 
     void Awake()
     {
@@ -44,6 +47,7 @@ public class Projectile : MonoBehaviour
                     if (pierceLeft <= 0)
                     {
                         transform.position = hit.point;
+                        Impact(hit.collider, hit.point, true);
                         lastPosition = hit.point;
                         velocity = Vector3.zero;
                         pendingReturn = true;
@@ -51,6 +55,7 @@ public class Projectile : MonoBehaviour
                     }
                     else
                     {
+                        Impact(hit.collider, hit.point, true);
                         pierceLeft--;
                         lastPosition = hit.point + direction.normalized * 0.01f;
                         transform.position = lastPosition;
@@ -60,6 +65,7 @@ public class Projectile : MonoBehaviour
                 else
                 {
                     transform.position = hit.point;
+                    Impact(hit.collider, hit.point, false);
                     lastPosition = hit.point;
                     velocity = Vector3.zero;
                     pendingReturn = true;
@@ -77,7 +83,7 @@ public class Projectile : MonoBehaviour
         if (life <= 0f) pool.Return(this);
     }
 
-    public void Launch(Vector3 dir, WeaponData weapon, GameObject shooter, ObjectPool<Projectile> pool, CharacterStats stats = null)
+    public void Launch(Vector3 dir, WeaponData weapon, GameObject shooter, ObjectPool<Projectile> pool, CharacterStats stats = null, List<OnHitEffect> onHitEffects = null)
     {
         float charSpeed = stats != null ? stats.GetStat(StatType.ProjectileSpeed) : 0f;
         float charPierce = stats != null ? stats.GetStat(StatType.PierceCount) : 0f;
@@ -90,9 +96,20 @@ public class Projectile : MonoBehaviour
         this.enemyMask = weapon.enemyMask;
         this.shooter = shooter;
         this.pool = pool;
+        this.onHitEffects = onHitEffects;
 
         this.pendingReturn = false;
         this.lastPosition = transform.position;
         if (Trail != null) Trail.Clear();
     }
+
+    void Impact(Collider other, Vector3 point, bool isEnemy)
+{
+    if (onHitEffects != null)
+        foreach (var e in onHitEffects)
+            e.Apply(shooter, other.gameObject, point);
+
+    if (isEnemy)
+        DamageCalculator.DealDamage(shooter, other.gameObject, damage, scaling: DamageScaling.Ranged);
+}
 }

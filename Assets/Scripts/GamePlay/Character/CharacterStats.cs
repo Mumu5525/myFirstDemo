@@ -45,6 +45,7 @@ public class CharacterStats : MonoBehaviour
             case StatType.MeleeRange:       return data.meleeRange;
             case StatType.ExplosionRadius:  return data.explosionRadius;
             case StatType.ExplosionDamage:  return data.explosionDamage;
+            case StatType.SpreadAngle:      return data.spreadAngle;
             default:                        return 0f;
         }
     }

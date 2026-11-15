@@ -16,10 +16,16 @@ public class PlayerAttack : MonoBehaviour
         inventory = GetComponent<PlayerInventory>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        if (!input.Attack) return;
         Weapon weapon = inventory.CurrentWeapon ?? fistWeapon;
-        weapon?.Attack(model.gameObject);
+        if(weapon == null || weapon.Data == null) return;
+
+        Vector3 aimPoint = model.position + model.forward * 10f;
+        Camera cam = Camera.main;
+        if(cam != null && MouseWorld.TryGetGroundPoint(cam, transform.position, out Vector3 groundPoint))
+            aimPoint = groundPoint;
+
+        weapon?.Attack(model.gameObject, aimPoint, input.AttackPressed, input.AttackHeld);
     }
 }

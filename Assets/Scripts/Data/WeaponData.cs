@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum WeaponType{ Melee,Ranged}
-
+public enum TriggerMode{Automatic, SemiAutomatic}
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Data/WeaponData")]
 public class WeaponData : ScriptableObject
 {
@@ -20,13 +20,21 @@ public class WeaponData : ScriptableObject
     public int basePrice = 100;
 
     [Header("远程(ranged)")]
+    public TriggerMode triggerMode = TriggerMode.Automatic;
     public int pierceCount = 1;
+    public int pelletCount = 1;
+    [Tooltip("扇形总角度(度), 0 = 精准")]
+    public float spreadAngle = 0;
     public float projectileSpeed = 20f;
     public float projectileLife = 5f;
     public Projectile projectilePrefab;
 
     [Header("近战")]
     public float meleeRange;
+
+    [Header("基础命中效果")]
+    public OnHitEffect baseOnHitEffect;
+
 
     [Header("可命中成层级")]
     public LayerMask hitMask;

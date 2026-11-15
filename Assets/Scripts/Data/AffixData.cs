@@ -21,6 +21,8 @@ public class AffixData : ScriptableObject
     public ModifierType modifierType = ModifierType.add;
     public float value;
 
+    [Header("命中效果（behavior = OnHit时生效）")]
+    public OnHitEffect onHitEffect;
     // ─── 描述 ───
     [Header("显示")]
     [TextArea(1, 3)]
@@ -36,4 +38,5 @@ public enum AffixBehavior
     Stat,
     /// <summary> 事件触发 → TriggerAffix（暂未实现） </summary>
     Trigger,
+    OnHit
 }
