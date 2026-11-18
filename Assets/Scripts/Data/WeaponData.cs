@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum WeaponType{ Melee,Ranged}
 public enum TriggerMode{Automatic, SemiAutomatic}
@@ -32,9 +33,17 @@ public class WeaponData : ScriptableObject
     [Header("近战")]
     public float meleeRange;
 
+    [Header("人机工效")]
+    [FormerlySerializedAs("ergonomics")]
+    [Range(0.1f, 1f)]
+    [Tooltip("开火时转向速度倍率，1 = 不减速")]
+    public float turnSpeedMultiplier = 1f;
+    [Range(0.1f, 1f)]
+    [Tooltip("开火时移动速度倍率，1 = 不减速")]
+    public float moveSpeedMultiplier = 1f;
+
     [Header("基础命中效果")]
     public OnHitEffect baseOnHitEffect;
-
 
     [Header("可命中成层级")]
     public LayerMask hitMask;

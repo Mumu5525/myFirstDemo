@@ -6,17 +6,19 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
-    Animator anim;
     GroundCheck groundCheck;
     PlayerInputReader input;
+    PlayerInventory inventory;
+    PlayerAnimator anim;
     [SerializeField] PlayerData data;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        anim = GetComponentInChildren<Animator>();
+        anim = GetComponentInChildren<PlayerAnimator>();
         groundCheck = GetComponent<GroundCheck>();
         input = GetComponent<PlayerInputReader>();
+        inventory = GetComponent<PlayerInventory>();
     }
     void Update()
     {
@@ -28,6 +30,17 @@ public class PlayerController : MonoBehaviour
         PlayerMove();
         PlayerRotate();
     }
+
+    /// <summary> 当前武器开火时的人机工效倍率。 </summary>
+    float TurnMultiplier
+        => inventory != null && inventory.CurrentWeapon != null
+            ? inventory.CurrentWeapon.TurnSpeedMultiplier
+            : 1f;
+
+    float MoveMultiplier
+        => inventory != null && inventory.CurrentWeapon != null
+            ? inventory.CurrentWeapon.MoveSpeedMultiplier
+            : 1f;
     
     private void PlayerMove()
     {
@@ -46,7 +59,7 @@ public class PlayerController : MonoBehaviour
         moveDirection = (cameraForward * inputDir.y + cameraRight * inputDir.x).normalized;
 
         //计算目标速度
-        Vector3 targetSpeed = moveDirection * data.speed;
+        Vector3 targetSpeed = moveDirection * (data.speed * MoveMultiplier);
         Vector3 currentSpeed = new Vector3(rb.velocity.x,0,rb.velocity.z);
         Vector3 flat = Vector3.MoveTowards(currentSpeed,targetSpeed,data.smoothing);
 
@@ -69,8 +82,11 @@ public class PlayerController : MonoBehaviour
 
             if(lookDir != Vector3.zero)
             {
+                // 人机工效：开火时降低转向速度
+                float turnSpeed = data.rotationSpeed * TurnMultiplier;
+
                 Quaternion targetRotation = Quaternion.LookRotation(lookDir);
-                Quaternion slerpRptation = Quaternion.Slerp(rb.rotation, targetRotation, data.rotationSpeed * Time.deltaTime);
+                Quaternion slerpRptation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
                 rb.MoveRotation(slerpRptation);
             }
         }
@@ -83,9 +99,6 @@ public class PlayerController : MonoBehaviour
         Vector3 localVel = transform.InverseTransformDirection(flatVel);
 
         //更新动画参数
-        anim.SetFloat("HorizontalSpeed", localVel.x, 0.1f, Time.deltaTime);
-        anim.SetFloat("VerticalSpeed", localVel.z, 0.1f, Time.deltaTime);
-        anim.SetFloat("AnimaSpeed",data.speed/6f);
-        anim.SetBool("Grounded",groundCheck.IsGrounded());
+        anim.SetLocomotion(new Vector2(localVel.x, localVel.z));
     }
 }

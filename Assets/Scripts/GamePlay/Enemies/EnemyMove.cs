@@ -43,7 +43,7 @@ public class EnemyMove : MonoBehaviour
 
     void Move()
     {
-        enemy.Anim.SetFloat("Speed",enemy.Rb.velocity.magnitude);
+        enemy.Anim.SetMoveSpeed(enemy.Rb.velocity.magnitude);
 
         Transform target = enemy.Target;
         if (target != null && enemy.Agent.enabled)

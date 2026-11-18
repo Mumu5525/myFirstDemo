@@ -5,8 +5,6 @@ using UnityEngine;
 // 攻击节奏全部由动画驱动：前摇填充扇形 → 命中帧结算一次 → 后摇
 public class EnemyAttack : MonoBehaviour
 {
-    const string AttackTrigger = "Attack";
-    const string AtkSpeed = "AttackSpeed";
 
     Enemy enemy;
     [SerializeField] LayerMask targetMask = 1 << 3;              // 目标层，默认 Player
@@ -32,8 +30,8 @@ public class EnemyAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            enemy.Anim.SetFloat(AtkSpeed, enemy.Stats.GetStat(StatType.AttackSpeed));
-            enemy.Anim.SetTrigger(AttackTrigger);
+            enemy.Anim.SetAttackSpeed(enemy.Stats.GetStat(StatType.AttackSpeed));
+            enemy.Anim.PlayAttack();
         }
     }
 

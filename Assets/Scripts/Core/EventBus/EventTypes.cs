@@ -55,7 +55,19 @@ public struct AfterUnitHit
     public bool isCritical;
 }
 
-/// <summary> 单位即将死亡（返回 true 可阻止死亡，如护盾/复活） </summary>
+/// <summary> 靶子实时伤害统计（DummyDamageTracker 周期发布，DPS 面板订阅） </summary>
+public struct OnDummyStats
+{
+    public GameObject dummy;
+    public float dps;             // 滚动窗口 DPS
+    public float totalDamage;     // 本次测试累计
+    public int hitCount;
+    public int critCount;
+    public float maxHit;
+    public float windowSeconds;
+}
+
+/// <summary> 单位即将死亡。订阅者可调用 Health.Revive 补回血量来取消死亡（护盾/复活/靶子等） </summary>
 public struct OnUnitPreDeath
 {
     public GameObject victim;
@@ -81,4 +93,10 @@ public struct OnEnemyRemoved
 {
     public GameObject enemy;
     public bool wasKilled;  // true=死亡, false=超时回收
+}
+
+/// <summary> 任意武器攻击 </summary>
+public struct OnWeaponAttack
+{
+    public GameObject shooter;
 }

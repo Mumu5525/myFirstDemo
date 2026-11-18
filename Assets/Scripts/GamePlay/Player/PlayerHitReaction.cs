@@ -4,8 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(Health))]
 public class PlayerHitReaction : MonoBehaviour
 {
-    static readonly int HitHash = Animator.StringToHash("Hit");
-
     [Header("受击动画")]
     [SerializeField] float hitCooldown = 0.3f;
 
@@ -14,13 +12,13 @@ public class PlayerHitReaction : MonoBehaviour
     [SerializeField] ScreenEdgeFlash screenEdgeFlash;
 
     Health health;
-    Animator anim;
+    PlayerAnimator anim;
     float lastHitTime;
 
     void Awake()
     {
         health = GetComponent<Health>();
-        anim = GetComponentInChildren<Animator>();   // Animator 在 model 子物体上
+        anim = GetComponentInChildren<PlayerAnimator>();   // Animator 在 model 子物体上
     }
 
     void OnEnable()  => health.OnDamaged += PlayHit;
@@ -36,9 +34,7 @@ public class PlayerHitReaction : MonoBehaviour
         lastHitTime = Time.time;
 
         //动画
-        if (anim != null && anim.isActiveAndEnabled)
-            anim.SetTrigger(HitHash);
-
+        anim.PlayHit();
         if(cameraShake != null) cameraShake.Shake();
         if(screenEdgeFlash != null) screenEdgeFlash.Play();
     }

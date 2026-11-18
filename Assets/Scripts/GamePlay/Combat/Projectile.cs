@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
     TrailRenderer Trail;
     ObjectPool<Projectile> pool;
     List<OnHitEffect> onHitEffects;
-    
+
 
     void Awake()
     {
@@ -43,7 +43,6 @@ public class Projectile : MonoBehaviour
                 bool isEnemy = (enemyMask.value & (1 << hit.collider.gameObject.layer)) != 0;
                 if (isEnemy)
                 {
-                    DamageCalculator.DealDamage(shooter, hit.collider.gameObject, damage, scaling: DamageScaling.Ranged);
                     if (pierceLeft <= 0)
                     {
                         transform.position = hit.point;
@@ -104,12 +103,14 @@ public class Projectile : MonoBehaviour
     }
 
     void Impact(Collider other, Vector3 point, bool isEnemy)
-{
-    if (onHitEffects != null)
-        foreach (var e in onHitEffects)
-            e.Apply(shooter, other.gameObject, point);
+    {
+        // 先结算直击伤害
+        if (isEnemy)
+            DamageCalculator.DealDamage(shooter, other.gameObject, damage, scaling: DamageScaling.Ranged);
 
-    if (isEnemy)
-        DamageCalculator.DealDamage(shooter, other.gameObject, damage, scaling: DamageScaling.Ranged);
-}
+        // 再结算附加效果伤害
+        if (onHitEffects != null)
+            foreach (var e in onHitEffects)
+                e.Apply(shooter, other.gameObject, point);
+    }
 }

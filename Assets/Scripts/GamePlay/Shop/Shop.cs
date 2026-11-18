@@ -151,7 +151,7 @@ public class Shop : MonoBehaviour
     void InstantiateWeaponForInventory(ItemEntry item)
     {
         var prefab = item.weaponData.weaponPrefab;
-        var weaponObj = Instantiate(prefab, inventory.transform);
+        var weaponObj = Instantiate(prefab, inventory.WeaponMount);
         var weapon = weaponObj.GetComponent<Weapon>();
         weapon.Setup(item.weaponData, item.affixes);
 

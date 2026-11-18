@@ -127,8 +127,28 @@ public class Health : MonoBehaviour
 
     void Die()
     {
+        // ─── 死亡前通知：订阅者可调用 Revive 把血量补回来，从而取消死亡 ───
+        EventBus<OnUnitPreDeath>.Publish(new OnUnitPreDeath
+        {
+            victim = gameObject,
+            killer = latestAttacker
+        });
+
+        // 订阅者没把血量补回来 → 正常死亡
+        if (currentHealth > 0f) return;
+
         // ─── 外层通知：EventBus<OnUnitDied> 全局广播，供跨系统监听（GoldSystem/WaveManager 等） ───
         EventBus<OnUnitDied>.Publish(new OnUnitDied { victim = gameObject, killer = latestAttacker });
         OnDeath?.Invoke();
+    }
+
+    /// <summary>
+    /// 从空血状态恢复。死亡前事件里由订阅者调用，可实现护盾/靶子不死等。
+    /// 保留多少血完全由调用方决定。
+    /// </summary>
+    public void Revive(float health)
+    {
+        currentHealth = Mathf.Clamp(health, 0f, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 }

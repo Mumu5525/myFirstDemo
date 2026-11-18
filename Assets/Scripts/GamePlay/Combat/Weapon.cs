@@ -4,13 +4,19 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     [SerializeField] WeaponData data;
+    [Tooltip("左手握持点（武器 prefab 内的子物体）")]
+    [SerializeField] Transform leftHandGrip;
     List<Affix> affixes;
-
-    /// <summary> 武器数据。Inspector 可预置（初始武器），Shop 生成时会用 Setup 覆盖。 </summary>
-    public WeaponData Data => data;
-    /// <summary> 此武器携带的词条，在装备/卸下时用于增删 AffixManager。 </summary>
-    public List<Affix> Affixes => affixes;
     float nextAttackTime;
+    bool firing;
+
+    public WeaponData Data => data;
+    public List<Affix> Affixes => affixes;
+    public Transform LeftHandGrip => leftHandGrip;
+
+    /// <summary> 开火时的人机工效倍率。 </summary>
+    public float TurnSpeedMultiplier => firing && Data != null ? Data.turnSpeedMultiplier : 1f;
+    public float MoveSpeedMultiplier => firing && Data != null ? Data.moveSpeedMultiplier : 1f;
 
     /// <summary> 初始化武器数据和词条（由 Shop 等生成方调用）。 </summary>
     public void Setup(WeaponData weaponData, List<Affix> weaponAffixes)
@@ -22,6 +28,8 @@ public abstract class Weapon : MonoBehaviour
 
     public void Attack(GameObject shooter, Vector3 aimPoint, bool pressedThisFrame, bool held)
     {
+        // 冷却期间也要记录，开火减速覆盖整个按住扳机的时间
+        firing = held;
         if (Time.time < nextAttackTime) return;
         
         bool wantsFire = Data.triggerMode == TriggerMode.SemiAutomatic
@@ -34,6 +42,7 @@ public abstract class Weapon : MonoBehaviour
         float effectiveAtkSpeed = Data.attackSpeed * charBonus;
         nextAttackTime = Time.time + 1f / Mathf.Max(0.01f, effectiveAtkSpeed);
         PerformAttack(shooter, stats, aimPoint);
+        EventBus<OnWeaponAttack>.Publish(new OnWeaponAttack{shooter = shooter});
     }
 
     protected virtual void OnSetup() { }

@@ -116,7 +116,7 @@ public class ShopUI : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab)) { SetOpen(!isOpen); return; }
+        if (Input.GetKeyDown(KeyCode.B)) { SetOpen(!isOpen); return; }
         if (Input.GetKeyDown(KeyCode.Escape) && isOpen) { SetOpen(false); return; }
         if (!isOpen) return;
 

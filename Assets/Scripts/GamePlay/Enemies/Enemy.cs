@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     EnemyDeath death;
     NavMeshAgent agent;
     Rigidbody rb;
-    Animator anim;
+    EnemyAnimator anim;
     EnemyData data;
     CharacterStats stats;
 
@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     public EnemyDeath Death => death != null ? death : (death = GetComponent<EnemyDeath>());
     public NavMeshAgent Agent => agent != null ? agent : (agent = GetComponent<NavMeshAgent>());
     public Rigidbody Rb => rb != null ? rb : (rb = GetComponent<Rigidbody>());
-    public Animator Anim => anim != null ? anim : (anim = GetComponentInChildren<Animator>());
+    public EnemyAnimator Anim => anim != null ? anim : (anim = GetComponentInChildren<EnemyAnimator>());
     public CharacterStats Stats => stats != null ? stats : (stats = GetComponent<CharacterStats>());
     public EnemyData Data => data != null ? data : (data = Stats.GetRawData<EnemyData>());
 
@@ -40,8 +40,7 @@ public class Enemy : MonoBehaviour
         Agent.Warp(position);           // 放到 NavMesh 上
         Agent.enabled = true;
         Ragdoll.Disable();              // 退出布娃娃（这里才会把 Animator 重新启用）
-        Anim.Rebind();                  // 重置到默认状态；不会触发 OnStateExit，所以复位攻击要单独做
-        Anim.Update(0f);
+        Anim.RebindAndUpdate();                  // 重置到默认状态；不会触发 OnStateExit，所以复位攻击要单独做
         GetComponent<EnemyAttack>()?.EndAttack();   // 兜底：清掉上一次残留的攻击表现
         LayerSetter.Set(transform, LayerMask.NameToLayer("Enemy"));
     }

@@ -51,25 +51,9 @@ public class RangedWeapon : Weapon
         var projectilePool = GetPool();
         if (projectilePool == null) return;
 
-        Vector3 forward = shooter.transform.forward;
-        forward.y = 0;
-        forward.Normalize();
-
-        Vector3 muzzlePos = muzzle != null
-            ? muzzle.position
-            : shooter.transform.position + Vector3.up + forward * 0.5f;
-
-        Vector3 aimDir = aimPoint - muzzlePos;
-        aimDir.y = 0;
-
-        // 阈值 = 枪口到玩家中心的水平距离，随枪口位置自适应
-        Vector3 muzzleToPlayer = shooter.transform.position - muzzlePos;
-        muzzleToPlayer.y = 0f;
-        float minAimDistSqr = muzzleToPlayer.sqrMagnitude;
-
-        // 鼠标压在枪口附近时方向会剧烈抖动，回退到角色朝向
-        if (aimDir.sqrMagnitude < minAimDistSqr)
-            aimDir = forward;
+        // 枪管轴向：武器根节点 → 枪口，不依赖 Muzzle 空物体的旋转
+        Vector3 aimDir = muzzle.position - transform.position;
+        aimDir.y = 0f;
         aimDir.Normalize();
 
         float spread = Data.spreadAngle;
@@ -84,6 +68,7 @@ public class RangedWeapon : Weapon
 
         float half = spread * 0.5f;
 
+        List<OnHitEffect> onHit = GetOnHitEffects();
         for (int i = 0; i < pellets; i++)
         {
             float angle;
@@ -100,9 +85,8 @@ public class RangedWeapon : Weapon
 
             Vector3 dir = Quaternion.Euler(0f, angle, 0f) * aimDir;
 
-            List<OnHitEffect> onHit = GetOnHitEffects();
             Projectile p = projectilePool.Get();
-            p.transform.position = muzzlePos;
+            p.transform.position = muzzle.position;
             p.transform.rotation = Quaternion.LookRotation(dir);
             p.Launch(dir, Data, shooter, projectilePool, stats, onHit);
         }

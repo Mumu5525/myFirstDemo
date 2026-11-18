@@ -6,35 +6,37 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 商店槽位 UI（只显示图标 / 价格 / 品质 / 锁定）。
-/// 悬停：边框不透明度提高 + 同色泛光；底色和尺寸都不变。
+/// 悬停：边框不透明度提高，底色和尺寸都不变。
 /// 左键 = 购买；Shift + 左键 = 锁定 / 解锁。
 /// </summary>
 public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    // ─── 显示 ───
+    // ═══════════════════════════════════════════
+    //  配置
+    // ═══════════════════════════════════════════
+
     [Header("显示")]
     [SerializeField] Image             panelBg;       // 内底（铺满槽位，负责接收鼠标）
     [SerializeField] Image[]           borderParts;   // 边框
-    [SerializeField] Image             glow;          // 背后柔光（贴图运行时生成）
     [SerializeField] Image             itemIcon;      // 物品图标
     [SerializeField] TextMeshProUGUI   priceText;     // 价格
     [SerializeField] Image             lockIcon;      // 右上角锁图标
     [SerializeField] GameObject        emptyMark;     // 可选：空槽占位
 
-    // ─── 动画 ───
-    [Header("边框 / 泛光")]
+    [Header("边框")]
     [SerializeField] float lerpSpeed         = 12f;
     [SerializeField] float borderAlphaNormal = 0.4f;
     [SerializeField] float borderAlphaHover  = 1f;
-    [SerializeField] float glowAlphaNormal   = 0f;
-    [SerializeField] float glowAlphaHover    = 0.55f;
 
-    // ─── 数据 ───
+    // ═══════════════════════════════════════════
+    //  运行时状态
+    // ═══════════════════════════════════════════
+
     ShopSlot slot;
     PlayerInventory inventory;
     bool hovered;
 
-    Color targetBorder, targetGlow, targetText;
+    Color targetBorder, targetText;
 
     public ShopSlot Slot => slot;
 
@@ -46,15 +48,6 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // ═══════════════════════════════════════════
     //  生命周期
     // ═══════════════════════════════════════════
-
-    void Awake()
-    {
-        if (glow != null)
-        {
-            glow.sprite = GlowSpriteFactory.Get();
-            glow.raycastTarget = false;
-        }
-    }
 
     public void Bind(ShopSlot shopSlot, PlayerInventory playerInventory)
     {
@@ -118,23 +111,21 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     void UpdateLockIcon()
     {
         if (lockIcon == null) return;
+
         bool show = slot != null && slot.IsLocked && HasItem;
         lockIcon.enabled = show;
         if (show) lockIcon.color = ShopHUDTheme.LockColor;
     }
 
     // ═══════════════════════════════════════════
-    //  颜色过渡
+    //  颜色
     // ═══════════════════════════════════════════
 
     void ComputeTargets()
     {
-        bool empty = !HasItem;
-
-        if (empty)
+        if (!HasItem)
         {
             targetBorder = ShopHUDTheme.EmptyBorder;
-            targetGlow   = new Color(0f, 0f, 0f, 0f);
             targetText   = ShopHUDTheme.TextDim;
             return;
         }
@@ -144,26 +135,16 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         Color rarity = ShopHUDTheme.RarityColor(tier);
         bool canAfford = inventory != null && inventory.Gold >= item.price;
 
-        // 悬停只提亮边框 + 同色泛光，不换底、不放大
         targetBorder = new Color(rarity.r, rarity.g, rarity.b,
                                  hovered ? borderAlphaHover : borderAlphaNormal);
-        targetGlow   = new Color(rarity.r, rarity.g, rarity.b,
-                                 hovered ? glowAlphaHover : glowAlphaNormal);
         targetText   = canAfford ? ShopHUDTheme.CanAfford : ShopHUDTheme.CannotAfford;
     }
 
     void SnapToTargets()
     {
-        ApplyColors(targetBorder, targetGlow, targetText);
-    }
+        SetBorder(targetBorder);
 
-    void ApplyColors(Color border, Color glowColor, Color text)
-    {
-        if (borderParts != null)
-            foreach (var b in borderParts)
-                if (b != null) b.color = border;
-        if (glow != null) glow.color = glowColor;
-        if (priceText != null) priceText.color = text;
+        if (priceText != null) priceText.color = targetText;
     }
 
     void Update()
@@ -174,8 +155,17 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (borderParts != null)
             foreach (var b in borderParts)
                 if (b != null) b.color = Color.Lerp(b.color, targetBorder, t);
-        if (glow != null) glow.color = Color.Lerp(glow.color, targetGlow, t);
-        if (priceText != null) priceText.color = Color.Lerp(priceText.color, targetText, t);
+
+        if (priceText != null)
+            priceText.color = Color.Lerp(priceText.color, targetText, t);
+    }
+
+    void SetBorder(Color color)
+    {
+        if (borderParts == null) return;
+
+        foreach (var b in borderParts)
+            if (b != null) b.color = color;
     }
 
     /// <summary> 金币变化时由 ShopUI 调用，重算“买得起/买不起”的颜色 </summary>
@@ -186,7 +176,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // ═══════════════════════════════════════════
-    //  鼠标交互
+    //  交互
     // ═══════════════════════════════════════════
 
     public void OnPointerEnter(PointerEventData e)

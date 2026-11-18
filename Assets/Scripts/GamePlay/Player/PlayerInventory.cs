@@ -14,6 +14,8 @@ public class PlayerInventory : MonoBehaviour
     [Tooltip("武器挂载位置")]
     [SerializeField] Transform weaponMount;
 
+    public Transform WeaponMount => weaponMount;
+
     // ─── 金币 ───
 
     public int Gold { get; private set; }
@@ -57,20 +59,26 @@ public class PlayerInventory : MonoBehaviour
 
     void CycleNext()
     {
-        for (int i = 1; i <= MaxWeaponSlots; i++)
+        int slots = Weapons.Length;
+        for (int i = 1; i <= slots; i++)
         {
-            int next = (CurrentIndex + i) % MaxWeaponSlots;
-            if (Weapons[next] != null) { CurrentIndex = next; return; }
+            int next = (CurrentIndex + i) % slots;
+            if (Weapons[next] != null) { CurrentIndex = next; break; }
         }
+        RefreshWeaponVisibility();
+        OnWeaponsChanged?.Invoke();
     }
 
     void CyclePrev()
     {
-        for (int i = 1; i <= MaxWeaponSlots; i++)
+        int slots = Weapons.Length;
+        for (int i = 1; i <= slots; i++)
         {
-            int prev = (CurrentIndex - i + MaxWeaponSlots) % MaxWeaponSlots;
-            if (Weapons[prev] != null) { CurrentIndex = prev; return; }
+            int prev = (CurrentIndex - i + slots) % slots;
+            if (Weapons[prev] != null) { CurrentIndex = prev; break; }
         }
+        RefreshWeaponVisibility();
+        OnWeaponsChanged?.Invoke();
     }
 
     int CountWeapons()
@@ -207,6 +215,7 @@ public class PlayerInventory : MonoBehaviour
             if (w != null)
                 affixManager?.EquipWeapon(w.Affixes);
 
+        RefreshWeaponVisibility();
         OnWeaponsChanged?.Invoke();
     }
 }

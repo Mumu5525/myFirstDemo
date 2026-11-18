@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class RagDoll : MonoBehaviour
 {
-    Animator anim;
+    CharacterAnimator anim;
     Rigidbody[] bones;
     Collider[] boneColliders;
 
     void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
+        anim = GetComponentInChildren<CharacterAnimator>();
         Rigidbody rootBone = GetComponent<Rigidbody>();
         bones = GetComponentsInChildren<Rigidbody>()
                 .Where(rb =>rb != rootBone)
@@ -27,7 +27,7 @@ public class RagDoll : MonoBehaviour
 
     public void Enable()
     {
-        anim.enabled = false;
+        anim?.SetEnable(false);
         SetColliders(true);
         foreach(var rb in bones)
             rb.isKinematic = false;
@@ -35,7 +35,7 @@ public class RagDoll : MonoBehaviour
 
     public void Disable()
     {
-        anim.enabled = true;
+        anim?.SetEnable(true);
         foreach(var rb in bones)
             rb.isKinematic = true;
         SetColliders(false);
