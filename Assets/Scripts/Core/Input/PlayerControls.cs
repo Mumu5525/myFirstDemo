@@ -135,6 +135,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwitchWeaponScroll"",
+                    ""type"": ""Value"",
+                    ""id"": ""297825a3-17b7-4077-a3fc-92a3bd9880c0"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -236,6 +245,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchWeaponNext"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fcbfbeb-deb3-4358-944f-a34f8380bd97"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchWeaponScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -292,24 +312,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""e1fe50f7-bd9a-4170-b834-4673d1d437b4"",
             ""actions"": [
                 {
-                    ""name"": ""LeftClick"",
-                    ""type"": ""Button"",
-                    ""id"": ""9680a074-5b82-4c51-8bad-0c973898b75c"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""RightClick"",
-                    ""type"": ""Button"",
-                    ""id"": ""69872c5a-bdde-4b83-942e-d404503f640d"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Refresh"",
                     ""type"": ""Button"",
                     ""id"": ""e4adeba3-ca31-4efe-8ab2-746b7f3959ba"",
@@ -328,38 +330,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Shift"",
+                    ""name"": ""Open/Close"",
                     ""type"": ""Button"",
-                    ""id"": ""1367c0b9-c204-4206-b939-0358004824bc"",
-                    ""expectedControlType"": """",
+                    ""id"": ""10f8e60f-074a-4c99-81af-613247a687b1"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""570c9714-637d-4349-9169-d9e0b9f6538a"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LeftClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3c6809d5-bd07-4cb7-abeb-bfb0c61624f9"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RightClick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""750c79aa-1fcc-42d2-b0e4-df4a38fea973"",
@@ -384,12 +364,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2689b791-8405-4108-af97-849778d5b67c"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""id"": ""a0bd547c-7788-4240-943e-ebcaed3d34ca"",
+                    ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Shift"",
+                    ""action"": ""Open/Close"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -400,37 +380,64 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""26af3b44-8a62-4325-af7e-68ac38d93a95"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Open/Close"",
                     ""type"": ""Button"",
                     ""id"": ""4cf014e7-6d86-4503-b6e2-0f7e7365917e"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""0f99a161-d792-43d5-8838-dc2d75193449"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Open/Close"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
             ]
         },
         {
-            ""name"": ""Map"",
-            ""id"": ""e141bb63-1b02-4aec-8f01-d6ed8fda0be7"",
+            ""name"": ""Basic"",
+            ""id"": ""dceec744-34a3-4c72-a8b6-56fdcacc513c"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Back"",
                     ""type"": ""Button"",
-                    ""id"": ""8cd5423f-2d3d-47db-a091-1935460bc129"",
+                    ""id"": ""7ca257db-442c-4e20-89e6-cff57548676c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""c04bbd07-9171-4f32-985b-89f908125d64"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""f38bbaf6-aed9-46cf-8f9e-53430b16ce2b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""97397f3f-6e99-4551-8f15-e31495e56ec5"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -440,12 +447,45 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""a1497bbd-7522-43fa-882b-e18c09adff1c"",
-                    ""path"": """",
+                    ""id"": ""7720d79c-d75b-4924-9974-43b218742b84"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0d07744a-c8c4-4e5e-b33e-86d886101ab5"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""22c81cc7-53f6-4b14-99f3-a845c82a8a18"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""caf46aff-3adb-438e-b796-7ccdf100bc5c"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -461,23 +501,25 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_SwitchWeaponPrevious = m_Player.FindAction("SwitchWeaponPrevious", throwIfNotFound: true);
         m_Player_SwitchWeaponNext = m_Player.FindAction("SwitchWeaponNext", throwIfNotFound: true);
+        m_Player_SwitchWeaponScroll = m_Player.FindAction("SwitchWeaponScroll", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_TurnLeft = m_Camera.FindAction("TurnLeft", throwIfNotFound: true);
         m_Camera_TurnRight = m_Camera.FindAction("TurnRight", throwIfNotFound: true);
         // Shop
         m_Shop = asset.FindActionMap("Shop", throwIfNotFound: true);
-        m_Shop_LeftClick = m_Shop.FindAction("LeftClick", throwIfNotFound: true);
-        m_Shop_RightClick = m_Shop.FindAction("RightClick", throwIfNotFound: true);
         m_Shop_Refresh = m_Shop.FindAction("Refresh", throwIfNotFound: true);
         m_Shop_Upgrade = m_Shop.FindAction("Upgrade", throwIfNotFound: true);
-        m_Shop_Shift = m_Shop.FindAction("Shift", throwIfNotFound: true);
+        m_Shop_OpenClose = m_Shop.FindAction("Open/Close", throwIfNotFound: true);
         // Inventory
         m_Inventory = asset.FindActionMap("Inventory", throwIfNotFound: true);
-        m_Inventory_Newaction = m_Inventory.FindAction("New action", throwIfNotFound: true);
-        // Map
-        m_Map = asset.FindActionMap("Map", throwIfNotFound: true);
-        m_Map_Newaction = m_Map.FindAction("New action", throwIfNotFound: true);
+        m_Inventory_OpenClose = m_Inventory.FindAction("Open/Close", throwIfNotFound: true);
+        // Basic
+        m_Basic = asset.FindActionMap("Basic", throwIfNotFound: true);
+        m_Basic_Back = m_Basic.FindAction("Back", throwIfNotFound: true);
+        m_Basic_RightClick = m_Basic.FindAction("RightClick", throwIfNotFound: true);
+        m_Basic_LeftClick = m_Basic.FindAction("LeftClick", throwIfNotFound: true);
+        m_Basic_Shift = m_Basic.FindAction("Shift", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -486,7 +528,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, PlayerControls.Camera.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Shop.enabled, "This will cause a leak and performance issues, PlayerControls.Shop.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Inventory.enabled, "This will cause a leak and performance issues, PlayerControls.Inventory.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Map.enabled, "This will cause a leak and performance issues, PlayerControls.Map.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Basic.enabled, "This will cause a leak and performance issues, PlayerControls.Basic.Disable() has not been called.");
     }
 
     /// <summary>
@@ -567,6 +609,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_SwitchWeaponPrevious;
     private readonly InputAction m_Player_SwitchWeaponNext;
+    private readonly InputAction m_Player_SwitchWeaponScroll;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -598,6 +641,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/SwitchWeaponNext".
         /// </summary>
         public InputAction @SwitchWeaponNext => m_Wrapper.m_Player_SwitchWeaponNext;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SwitchWeaponScroll".
+        /// </summary>
+        public InputAction @SwitchWeaponScroll => m_Wrapper.m_Player_SwitchWeaponScroll;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -639,6 +686,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchWeaponNext.started += instance.OnSwitchWeaponNext;
             @SwitchWeaponNext.performed += instance.OnSwitchWeaponNext;
             @SwitchWeaponNext.canceled += instance.OnSwitchWeaponNext;
+            @SwitchWeaponScroll.started += instance.OnSwitchWeaponScroll;
+            @SwitchWeaponScroll.performed += instance.OnSwitchWeaponScroll;
+            @SwitchWeaponScroll.canceled += instance.OnSwitchWeaponScroll;
         }
 
         /// <summary>
@@ -665,6 +715,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchWeaponNext.started -= instance.OnSwitchWeaponNext;
             @SwitchWeaponNext.performed -= instance.OnSwitchWeaponNext;
             @SwitchWeaponNext.canceled -= instance.OnSwitchWeaponNext;
+            @SwitchWeaponScroll.started -= instance.OnSwitchWeaponScroll;
+            @SwitchWeaponScroll.performed -= instance.OnSwitchWeaponScroll;
+            @SwitchWeaponScroll.canceled -= instance.OnSwitchWeaponScroll;
         }
 
         /// <summary>
@@ -809,11 +862,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // Shop
     private readonly InputActionMap m_Shop;
     private List<IShopActions> m_ShopActionsCallbackInterfaces = new List<IShopActions>();
-    private readonly InputAction m_Shop_LeftClick;
-    private readonly InputAction m_Shop_RightClick;
     private readonly InputAction m_Shop_Refresh;
     private readonly InputAction m_Shop_Upgrade;
-    private readonly InputAction m_Shop_Shift;
+    private readonly InputAction m_Shop_OpenClose;
     /// <summary>
     /// Provides access to input actions defined in input action map "Shop".
     /// </summary>
@@ -826,14 +877,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public ShopActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Shop/LeftClick".
-        /// </summary>
-        public InputAction @LeftClick => m_Wrapper.m_Shop_LeftClick;
-        /// <summary>
-        /// Provides access to the underlying input action "Shop/RightClick".
-        /// </summary>
-        public InputAction @RightClick => m_Wrapper.m_Shop_RightClick;
-        /// <summary>
         /// Provides access to the underlying input action "Shop/Refresh".
         /// </summary>
         public InputAction @Refresh => m_Wrapper.m_Shop_Refresh;
@@ -842,9 +885,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Upgrade => m_Wrapper.m_Shop_Upgrade;
         /// <summary>
-        /// Provides access to the underlying input action "Shop/Shift".
+        /// Provides access to the underlying input action "Shop/OpenClose".
         /// </summary>
-        public InputAction @Shift => m_Wrapper.m_Shop_Shift;
+        public InputAction @OpenClose => m_Wrapper.m_Shop_OpenClose;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -871,21 +914,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_ShopActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_ShopActionsCallbackInterfaces.Add(instance);
-            @LeftClick.started += instance.OnLeftClick;
-            @LeftClick.performed += instance.OnLeftClick;
-            @LeftClick.canceled += instance.OnLeftClick;
-            @RightClick.started += instance.OnRightClick;
-            @RightClick.performed += instance.OnRightClick;
-            @RightClick.canceled += instance.OnRightClick;
             @Refresh.started += instance.OnRefresh;
             @Refresh.performed += instance.OnRefresh;
             @Refresh.canceled += instance.OnRefresh;
             @Upgrade.started += instance.OnUpgrade;
             @Upgrade.performed += instance.OnUpgrade;
             @Upgrade.canceled += instance.OnUpgrade;
-            @Shift.started += instance.OnShift;
-            @Shift.performed += instance.OnShift;
-            @Shift.canceled += instance.OnShift;
+            @OpenClose.started += instance.OnOpenClose;
+            @OpenClose.performed += instance.OnOpenClose;
+            @OpenClose.canceled += instance.OnOpenClose;
         }
 
         /// <summary>
@@ -897,21 +934,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="ShopActions" />
         private void UnregisterCallbacks(IShopActions instance)
         {
-            @LeftClick.started -= instance.OnLeftClick;
-            @LeftClick.performed -= instance.OnLeftClick;
-            @LeftClick.canceled -= instance.OnLeftClick;
-            @RightClick.started -= instance.OnRightClick;
-            @RightClick.performed -= instance.OnRightClick;
-            @RightClick.canceled -= instance.OnRightClick;
             @Refresh.started -= instance.OnRefresh;
             @Refresh.performed -= instance.OnRefresh;
             @Refresh.canceled -= instance.OnRefresh;
             @Upgrade.started -= instance.OnUpgrade;
             @Upgrade.performed -= instance.OnUpgrade;
             @Upgrade.canceled -= instance.OnUpgrade;
-            @Shift.started -= instance.OnShift;
-            @Shift.performed -= instance.OnShift;
-            @Shift.canceled -= instance.OnShift;
+            @OpenClose.started -= instance.OnOpenClose;
+            @OpenClose.performed -= instance.OnOpenClose;
+            @OpenClose.canceled -= instance.OnOpenClose;
         }
 
         /// <summary>
@@ -949,7 +980,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // Inventory
     private readonly InputActionMap m_Inventory;
     private List<IInventoryActions> m_InventoryActionsCallbackInterfaces = new List<IInventoryActions>();
-    private readonly InputAction m_Inventory_Newaction;
+    private readonly InputAction m_Inventory_OpenClose;
     /// <summary>
     /// Provides access to input actions defined in input action map "Inventory".
     /// </summary>
@@ -962,9 +993,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public InventoryActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Inventory/Newaction".
+        /// Provides access to the underlying input action "Inventory/OpenClose".
         /// </summary>
-        public InputAction @Newaction => m_Wrapper.m_Inventory_Newaction;
+        public InputAction @OpenClose => m_Wrapper.m_Inventory_OpenClose;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -991,9 +1022,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_InventoryActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_InventoryActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            @OpenClose.started += instance.OnOpenClose;
+            @OpenClose.performed += instance.OnOpenClose;
+            @OpenClose.canceled += instance.OnOpenClose;
         }
 
         /// <summary>
@@ -1005,9 +1036,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="InventoryActions" />
         private void UnregisterCallbacks(IInventoryActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @OpenClose.started -= instance.OnOpenClose;
+            @OpenClose.performed -= instance.OnOpenClose;
+            @OpenClose.canceled -= instance.OnOpenClose;
         }
 
         /// <summary>
@@ -1042,29 +1073,44 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     /// </summary>
     public InventoryActions @Inventory => new InventoryActions(this);
 
-    // Map
-    private readonly InputActionMap m_Map;
-    private List<IMapActions> m_MapActionsCallbackInterfaces = new List<IMapActions>();
-    private readonly InputAction m_Map_Newaction;
+    // Basic
+    private readonly InputActionMap m_Basic;
+    private List<IBasicActions> m_BasicActionsCallbackInterfaces = new List<IBasicActions>();
+    private readonly InputAction m_Basic_Back;
+    private readonly InputAction m_Basic_RightClick;
+    private readonly InputAction m_Basic_LeftClick;
+    private readonly InputAction m_Basic_Shift;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Map".
+    /// Provides access to input actions defined in input action map "Basic".
     /// </summary>
-    public struct MapActions
+    public struct BasicActions
     {
         private @PlayerControls m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public MapActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public BasicActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Map/Newaction".
+        /// Provides access to the underlying input action "Basic/Back".
         /// </summary>
-        public InputAction @Newaction => m_Wrapper.m_Map_Newaction;
+        public InputAction @Back => m_Wrapper.m_Basic_Back;
+        /// <summary>
+        /// Provides access to the underlying input action "Basic/RightClick".
+        /// </summary>
+        public InputAction @RightClick => m_Wrapper.m_Basic_RightClick;
+        /// <summary>
+        /// Provides access to the underlying input action "Basic/LeftClick".
+        /// </summary>
+        public InputAction @LeftClick => m_Wrapper.m_Basic_LeftClick;
+        /// <summary>
+        /// Provides access to the underlying input action "Basic/Shift".
+        /// </summary>
+        public InputAction @Shift => m_Wrapper.m_Basic_Shift;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Map; }
+        public InputActionMap Get() { return m_Wrapper.m_Basic; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -1072,9 +1118,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="MapActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="BasicActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(MapActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(BasicActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -1082,14 +1128,23 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="MapActions" />
-        public void AddCallbacks(IMapActions instance)
+        /// <seealso cref="BasicActions" />
+        public void AddCallbacks(IBasicActions instance)
         {
-            if (instance == null || m_Wrapper.m_MapActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_MapActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            if (instance == null || m_Wrapper.m_BasicActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BasicActionsCallbackInterfaces.Add(instance);
+            @Back.started += instance.OnBack;
+            @Back.performed += instance.OnBack;
+            @Back.canceled += instance.OnBack;
+            @RightClick.started += instance.OnRightClick;
+            @RightClick.performed += instance.OnRightClick;
+            @RightClick.canceled += instance.OnRightClick;
+            @LeftClick.started += instance.OnLeftClick;
+            @LeftClick.performed += instance.OnLeftClick;
+            @LeftClick.canceled += instance.OnLeftClick;
+            @Shift.started += instance.OnShift;
+            @Shift.performed += instance.OnShift;
+            @Shift.canceled += instance.OnShift;
         }
 
         /// <summary>
@@ -1098,21 +1153,30 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="MapActions" />
-        private void UnregisterCallbacks(IMapActions instance)
+        /// <seealso cref="BasicActions" />
+        private void UnregisterCallbacks(IBasicActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @Back.started -= instance.OnBack;
+            @Back.performed -= instance.OnBack;
+            @Back.canceled -= instance.OnBack;
+            @RightClick.started -= instance.OnRightClick;
+            @RightClick.performed -= instance.OnRightClick;
+            @RightClick.canceled -= instance.OnRightClick;
+            @LeftClick.started -= instance.OnLeftClick;
+            @LeftClick.performed -= instance.OnLeftClick;
+            @LeftClick.canceled -= instance.OnLeftClick;
+            @Shift.started -= instance.OnShift;
+            @Shift.performed -= instance.OnShift;
+            @Shift.canceled -= instance.OnShift;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="MapActions.UnregisterCallbacks(IMapActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="BasicActions.UnregisterCallbacks(IBasicActions)" />.
         /// </summary>
-        /// <seealso cref="MapActions.UnregisterCallbacks(IMapActions)" />
-        public void RemoveCallbacks(IMapActions instance)
+        /// <seealso cref="BasicActions.UnregisterCallbacks(IBasicActions)" />
+        public void RemoveCallbacks(IBasicActions instance)
         {
-            if (m_Wrapper.m_MapActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_BasicActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -1122,21 +1186,21 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="MapActions.AddCallbacks(IMapActions)" />
-        /// <seealso cref="MapActions.RemoveCallbacks(IMapActions)" />
-        /// <seealso cref="MapActions.UnregisterCallbacks(IMapActions)" />
-        public void SetCallbacks(IMapActions instance)
+        /// <seealso cref="BasicActions.AddCallbacks(IBasicActions)" />
+        /// <seealso cref="BasicActions.RemoveCallbacks(IBasicActions)" />
+        /// <seealso cref="BasicActions.UnregisterCallbacks(IBasicActions)" />
+        public void SetCallbacks(IBasicActions instance)
         {
-            foreach (var item in m_Wrapper.m_MapActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_BasicActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_MapActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_BasicActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="MapActions" /> instance referencing this action map.
+    /// Provides a new <see cref="BasicActions" /> instance referencing this action map.
     /// </summary>
-    public MapActions @Map => new MapActions(this);
+    public BasicActions @Basic => new BasicActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Player" which allows adding and removing callbacks.
     /// </summary>
@@ -1179,6 +1243,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSwitchWeaponNext(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SwitchWeaponScroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSwitchWeaponScroll(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.
@@ -1210,20 +1281,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IShopActions
     {
         /// <summary>
-        /// Method invoked when associated input action "LeftClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLeftClick(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "RightClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRightClick(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Refresh" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1238,12 +1295,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUpgrade(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Shift" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Open/Close" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnShift(InputAction.CallbackContext context);
+        void OnOpenClose(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Inventory" which allows adding and removing callbacks.
@@ -1253,26 +1310,47 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IInventoryActions
     {
         /// <summary>
-        /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Open/Close" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnOpenClose(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Map" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Basic" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="MapActions.AddCallbacks(IMapActions)" />
-    /// <seealso cref="MapActions.RemoveCallbacks(IMapActions)" />
-    public interface IMapActions
+    /// <seealso cref="BasicActions.AddCallbacks(IBasicActions)" />
+    /// <seealso cref="BasicActions.RemoveCallbacks(IBasicActions)" />
+    public interface IBasicActions
     {
         /// <summary>
-        /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Back" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftClick" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftClick(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Shift" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShift(InputAction.CallbackContext context);
     }
 }

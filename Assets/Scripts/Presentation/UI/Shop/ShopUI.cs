@@ -47,10 +47,14 @@ public class ShopUI : MonoBehaviour
     [SerializeField] PlayerInventory inventory;
     [SerializeField] PlayerInputReader inputReader;
 
+    [Header("背包")]
+    [SerializeField] InventoryUI inventoryUI;   // 武器槽满时用来选择要替换的武器
+
     ShopSlotUI[] weaponSlotUIs;
     ShopSlotUI[] relicSlotUIs;
     ShopSlot lastHovered;
     bool isOpen;
+    bool replacing;   // 武器替换流程中：商店暂时隐藏，背包接管
 
     // ═══════════════════════════════════════════
     //  生命周期
@@ -78,6 +82,7 @@ public class ShopUI : MonoBehaviour
         shop.OnShopRefreshed    += OnShopRefreshed;
         shop.OnItemPurchased    += OnItemPurchased;
         shop.OnShopLevelChanged += OnLevelChanged;
+        shop.OnWeaponReplaceRequested += OnWeaponReplaceRequested;
 
         if (inventory != null) inventory.OnGoldChanged += OnGoldChanged;
 
@@ -100,6 +105,7 @@ public class ShopUI : MonoBehaviour
             shop.OnShopRefreshed    -= OnShopRefreshed;
             shop.OnItemPurchased    -= OnItemPurchased;
             shop.OnShopLevelChanged -= OnLevelChanged;
+            shop.OnWeaponReplaceRequested -= OnWeaponReplaceRequested;
 
             foreach (var s in shop.weaponSlots)
                 if (s != null) s.OnLockToggled -= OnAnyLockChanged;
@@ -116,12 +122,15 @@ public class ShopUI : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B)) { SetOpen(!isOpen); return; }
-        if (Input.GetKeyDown(KeyCode.Escape) && isOpen) { SetOpen(false); return; }
+        // 替换流程中由背包接管输入，避免误开/误关商店
+        if (replacing || inputReader == null) return;
+
+        if (inputReader.ShopTogglePressed) { SetOpen(!isOpen); return; }
+        if (inputReader.BackPressed && isOpen) { SetOpen(false); return; }
         if (!isOpen) return;
 
-        if (Input.GetKeyDown(KeyCode.Q)) shop?.PerformRefresh();
-        if (Input.GetKeyDown(KeyCode.E)) shop?.Upgrade();
+        if (inputReader.ShopRefreshPressed) shop?.PerformRefresh();
+        if (inputReader.ShopUpgradePressed) shop?.Upgrade();
     }
 
     void SetOpen(bool open)
@@ -131,8 +140,8 @@ public class ShopUI : MonoBehaviour
         isOpen = open;
         shopPanel.SetActive(open);
 
-        // 打开商店时禁用玩家输入（移动/攻击/QE 转镜头），关闭时恢复
-        if (inputReader != null) inputReader.enabled = !open;
+        // 商店模式只启用 Shop + Basic，玩家移动/攻击/背包开关全部失效
+        inputReader?.SetMode(open ? InputMode.Shop : InputMode.Gameplay);
 
         if (open)
         {
@@ -195,6 +204,7 @@ public class ShopUI : MonoBehaviour
 
         var ui = go.GetComponent<ShopSlotUI>();
         ui.Hovered += OnSlotHovered;
+        ui.SetInputReader(inputReader);
         return ui;
     }
 
@@ -202,6 +212,65 @@ public class ShopUI : MonoBehaviour
     {
         lastHovered = ui.Slot;
         ShowDetail();
+    }
+
+    // ═══════════════════════════════════════════
+    //  武器槽满：打开背包替换
+    // ═══════════════════════════════════════════
+
+    void OnWeaponReplaceRequested(ItemEntry item)
+    {
+        if (inventoryUI == null)
+        {
+            Debug.LogWarning("[ShopUI] 武器槽已满，但没有指定 InventoryUI，无法进入替换流程");
+            shop.CancelPendingWeaponReplace();
+            return;
+        }
+
+        if (replacing) return;
+
+        // 暂时关闭商店页面，但保持 isOpen 状态
+        replacing = true;
+        if (shopPanel != null) shopPanel.SetActive(false);
+
+        // 输入交给背包：Shop Map 禁用，Tab/B 不会互相误触
+        inputReader?.SetMode(InputMode.Inventory);
+
+        inventoryUI.OpenForWeaponReplace(item, OnReplaceSlotSelected, OnReplaceCancelled);
+    }
+
+    void OnReplaceSlotSelected(int slotIndex)
+    {
+        bool ok = shop.CompletePendingWeaponReplace(slotIndex);
+        if (!ok) shop.CancelPendingWeaponReplace();
+
+        inventoryUI.EndReplaceMode(false);
+        inventoryUI.Close(false);   // 输入模式由 EndReplace 恢复为 Shop
+
+        EndReplace();
+    }
+
+    void OnReplaceCancelled()
+    {
+        shop.CancelPendingWeaponReplace();
+        EndReplace();
+    }
+
+    /// <summary> 替换结束：恢复商店页面 </summary>
+    void EndReplace()
+    {
+        if (!replacing) return;
+
+        replacing = false;
+
+        if (isOpen && shopPanel != null)
+        {
+            shopPanel.SetActive(true);
+            RefreshAllSlots();
+            ShowDetail();
+        }
+
+        inputReader?.SetMode(isOpen ? InputMode.Shop : InputMode.Gameplay);
     }
 
     void ShowDetail()

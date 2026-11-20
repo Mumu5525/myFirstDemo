@@ -141,6 +141,16 @@ public class PlayerInventory : MonoBehaviour
 
         affixManager?.EquipWeapon(newWeapon.Affixes);
         Weapons[slotIndex] = newWeapon;
+
+        // 和 AddWeapon 一致：新武器要挂到手上，并刷新可见性
+        if (weaponMount != null)
+        {
+            newWeapon.transform.SetParent(weaponMount);
+            newWeapon.transform.localPosition = Vector3.zero;
+            newWeapon.transform.localRotation = Quaternion.identity;
+        }
+
+        RefreshWeaponVisibility();
         OnWeaponsChanged?.Invoke();
         return old;
     }

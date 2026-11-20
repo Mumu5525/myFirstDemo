@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
     Vector3 velocity;
     float life;
     float damage;
+    float criticalChance;
     int pierceLeft;
     bool pendingReturn;
     Vector3 lastPosition;
@@ -90,6 +91,7 @@ public class Projectile : MonoBehaviour
         this.velocity = dir * (weapon.projectileSpeed + charSpeed);
         this.life = weapon.projectileLife;
         this.damage = weapon.damage;   // 补在 life 赋值旁边
+        this.criticalChance = weapon.criticalChance;
         this.pierceLeft = weapon.pierceCount + (int)charPierce;
         this.hitMask = weapon.hitMask;
         this.enemyMask = weapon.enemyMask;
@@ -106,7 +108,8 @@ public class Projectile : MonoBehaviour
     {
         // 先结算直击伤害
         if (isEnemy)
-            DamageCalculator.DealDamage(shooter, other.gameObject, damage, scaling: DamageScaling.Ranged);
+            DamageCalculator.DealDamage(shooter, other.gameObject, damage,
+                scaling: DamageScaling.Ranged, extraCriticalChance: criticalChance);
 
         // 再结算附加效果伤害
         if (onHitEffects != null)

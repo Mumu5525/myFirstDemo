@@ -11,6 +11,7 @@ public class AttackSectorVisual : MonoBehaviour
 
     float radius;
     float angle;
+    Mesh rangeMesh;
     Mesh fillMesh;
     float lastFill = -1f;
 
@@ -25,9 +26,9 @@ public class AttackSectorVisual : MonoBehaviour
         visual.angle = angle;
 
         // 底色：完整扇形
-        Mesh rangeMesh = new Mesh { name = "AttackRange" };
-        BuildFan(rangeMesh, radius, -angle * 0.5f, angle * 0.5f);
-        CreateLayer(go.transform, "Range", rangeMesh, RangeColor);
+        visual.rangeMesh = new Mesh { name = "AttackRange" };
+        BuildFan(visual.rangeMesh, radius, -angle * 0.5f, angle * 0.5f);
+        CreateLayer(go.transform, "Range", visual.rangeMesh, RangeColor);
 
         // 填充：亮红扇形，随充能角度变大
         visual.fillMesh = new Mesh { name = "AttackFill" };
@@ -41,6 +42,18 @@ public class AttackSectorVisual : MonoBehaviour
     public void SetVisible(bool visible)
     {
         gameObject.SetActive(visible);
+    }
+
+    // 数据在运行时被调整时重建扇形；没有变化则直接返回
+    public void SetShape(float newRadius, float newAngle)
+    {
+        if (Mathf.Approximately(newRadius, radius) && Mathf.Approximately(newAngle, angle)) return;
+        radius = newRadius;
+        angle = newAngle;
+
+        BuildFan(rangeMesh, radius, -angle * 0.5f, angle * 0.5f);
+        fillMesh.Clear();
+        lastFill = -1f;
     }
 
     // progress: 0 = 只显示底色，1 = 填满整个扇形（从左边沿扫到右边沿）

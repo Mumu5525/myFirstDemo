@@ -6,12 +6,15 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] WeaponData data;
     [Tooltip("左手握持点（武器 prefab 内的子物体）")]
     [SerializeField] Transform leftHandGrip;
+    [Tooltip("这把武器实例的品质（动态生成，不放在 WeaponData 上）")]
+    [SerializeField] AffixTier rarity = AffixTier.T1;
     List<Affix> affixes;
     float nextAttackTime;
     bool firing;
 
     public WeaponData Data => data;
     public List<Affix> Affixes => affixes;
+    public AffixTier Rarity => rarity;
     public Transform LeftHandGrip => leftHandGrip;
 
     /// <summary> 开火时的人机工效倍率。 </summary>
@@ -19,10 +22,11 @@ public abstract class Weapon : MonoBehaviour
     public float MoveSpeedMultiplier => firing && Data != null ? Data.moveSpeedMultiplier : 1f;
 
     /// <summary> 初始化武器数据和词条（由 Shop 等生成方调用）。 </summary>
-    public void Setup(WeaponData weaponData, List<Affix> weaponAffixes)
+    public void Setup(WeaponData weaponData, List<Affix> weaponAffixes, AffixTier weaponRarity = AffixTier.T1)
     {
         data = weaponData;
         affixes = weaponAffixes;
+        rarity = weaponRarity;
         OnSetup();
     }
 

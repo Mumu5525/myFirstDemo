@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     PlayerInputReader input;
     PlayerInventory inventory;
     PlayerAnimator anim;
-    [SerializeField] PlayerData data;
+    CharacterStats stats;
 
     void Awake()
     {
@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
         groundCheck = GetComponent<GroundCheck>();
         input = GetComponent<PlayerInputReader>();
         inventory = GetComponent<PlayerInventory>();
+        stats = GetComponent<CharacterStats>();
     }
     void Update()
     {
@@ -59,9 +60,9 @@ public class PlayerController : MonoBehaviour
         moveDirection = (cameraForward * inputDir.y + cameraRight * inputDir.x).normalized;
 
         //计算目标速度
-        Vector3 targetSpeed = moveDirection * (data.speed * MoveMultiplier);
+        Vector3 targetSpeed = moveDirection * (stats.GetStat(StatType.Speed) * MoveMultiplier);
         Vector3 currentSpeed = new Vector3(rb.velocity.x,0,rb.velocity.z);
-        Vector3 flat = Vector3.MoveTowards(currentSpeed,targetSpeed,data.smoothing);
+        Vector3 flat = Vector3.MoveTowards(currentSpeed,targetSpeed,stats.GetStat(StatType.Smoothing));
 
         //移动玩家
         rb.velocity = new Vector3(flat.x, rb.velocity.y, flat.z);
@@ -83,7 +84,7 @@ public class PlayerController : MonoBehaviour
             if(lookDir != Vector3.zero)
             {
                 // 人机工效：开火时降低转向速度
-                float turnSpeed = data.rotationSpeed * TurnMultiplier;
+                float turnSpeed = stats.GetStat(StatType.RotationSpeed) * TurnMultiplier;
 
                 Quaternion targetRotation = Quaternion.LookRotation(lookDir);
                 Quaternion slerpRptation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);

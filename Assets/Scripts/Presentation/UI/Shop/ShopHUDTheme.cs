@@ -35,6 +35,10 @@ public static class ShopHUDTheme
     // ─── 状态色 ───
     public static readonly Color CanAfford    = Hex("#ffffff");
     public static readonly Color CannotAfford = Hex("#FF4444");
+
+    // ─── 属性对比 ───
+    public static readonly Color StatBetter = Hex("#44D17A");   // 绿：数值更高
+    public static readonly Color StatWorse  = Hex("#FF4444");   // 红：数值更低
     public static readonly Color ButtonNormal = Hex("#0F0B09");
     public static readonly Color ButtonHover  = Hex("#0F0B09");
 

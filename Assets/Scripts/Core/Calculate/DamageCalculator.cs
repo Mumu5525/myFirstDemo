@@ -11,8 +11,10 @@ public static class DamageCalculator
     /// <param name="baseDamage">基础伤害：武器伤害 / 拳头伤害 / 敌人基础攻击，不含角色加成</param>
     /// <param name="type">伤害来源类型，供表现层过滤</param>
     /// <param name="scaling">吃哪一项角色加成；None 表示不吃加成</param>
+    /// <param name="extraCriticalChance">武器自带的暴击率（0~1），与角色暴击率相加</param>
     public static void DealDamage(GameObject source, GameObject target, float baseDamage,
-        DamageType type = DamageType.Direct, DamageScaling scaling = DamageScaling.None)
+        DamageType type = DamageType.Direct, DamageScaling scaling = DamageScaling.None,
+        float extraCriticalChance = 0f)
     {
         if (target == null) return;
 
@@ -32,7 +34,7 @@ public static class DamageCalculator
             else if (scaling == DamageScaling.Ranged)
                 finalDamage += sourceStats.GetStat(StatType.RangedDamage);
 
-            float chance = sourceStats.GetStat(StatType.CriticalChance);
+            float chance = sourceStats.GetStat(StatType.CriticalChance) + extraCriticalChance;
             if (Random.value < chance)      // 约定 chance 为 0~1
             {
                 finalDamage *= sourceStats.GetStat(StatType.CriticalDamage);

@@ -34,6 +34,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     ShopSlot slot;
     PlayerInventory inventory;
+    PlayerInputReader inputReader;
     bool hovered;
 
     Color targetBorder, targetText;
@@ -42,6 +43,8 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     /// <summary> 鼠标进入时触发，ShopUI 用它更新右侧详情 </summary>
     public event Action<ShopSlotUI> Hovered;
+
+    public void SetInputReader(PlayerInputReader reader) => inputReader = reader;
 
     bool HasItem => slot != null && slot.item != null;
 
@@ -197,7 +200,7 @@ public class ShopSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!HasItem) return;
         if (e.button != PointerEventData.InputButton.Left) return;
 
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        if (inputReader != null && inputReader.ShiftHeld)
             slot.ToggleLock();
         else
             slot.RequestBuy();

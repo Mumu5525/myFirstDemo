@@ -8,36 +8,55 @@ public class EnemyAttack : MonoBehaviour
 
     Enemy enemy;
     [SerializeField] LayerMask targetMask = 1 << 3;              // 目标层，默认 Player
-    [SerializeField] float attackRange = 1.2f;                    // 扇形半径
-    [SerializeField, Range(0f, 360f)] float attackAngle = 120f;   // 扇形总角度
-    [SerializeField] float baseDamage = 10f;                      // 基础伤害，角色加成在 DamageCalculator 里叠加
+    [SerializeField] float defaultWindup = 0.2f;                  // 首次攻击前还没有实测前摇时的兜底值（秒）
 
     AttackSectorVisual sector;
-    bool struck;   // 本次攻击是否已经结算过命中，防止命中帧被重复触发
+    bool struck;      // 本次攻击是否已经结算过命中，防止命中帧被重复触发
+    bool attacking;   // 攻击状态进行中，用来关掉起手检测
+    float attackEnterTime;
+    float lastWindup; // 上一次实测的前摇（秒），用于预测起手距离
 
     void Awake()
     {
         enemy = GetComponent<Enemy>();
-        sector = AttackSectorVisual.Create(transform, attackRange, attackAngle);
+        sector = AttackSectorVisual.Create(transform,
+            enemy.Stats.GetStat(StatType.AttackRange),
+            enemy.Stats.GetStat(StatType.AttackAngle));
     }
 
     void Update()
     {
-        TryAttack();
+        sector.SetShape(enemy.Stats.GetStat(StatType.AttackRange), enemy.Stats.GetStat(StatType.AttackAngle));   // 运行时改数据/加成也能即时反映
+        if (!attacking) TryAttack();
     }
 
+    // 前摇非零，所以要在进入攻击范围之前起手：
+    // 让命中帧到来时，敌人与目标的距离正好落进攻击半径。
     void TryAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            enemy.Anim.SetAttackSpeed(enemy.Stats.GetStat(StatType.AttackSpeed));
-            enemy.Anim.PlayAttack();
-        }
+        Transform target = enemy.Target;
+        if (target == null) return;
+
+        Vector3 toTarget = target.position - transform.position;
+        toTarget.y = 0f;
+        float gap = toTarget.magnitude;
+        if (gap < 0.001f) return;
+
+        Vector3 flatVelocity = new Vector3(enemy.Rb.velocity.x, 0f, enemy.Rb.velocity.z);
+        float closingSpeed = Vector3.Dot(flatVelocity, toTarget / gap);
+        float windup = lastWindup > 0f ? lastWindup : defaultWindup;
+
+        if (gap > enemy.Stats.GetStat(StatType.AttackRange) + Mathf.Max(0f, closingSpeed) * windup) return;
+
+        enemy.Anim.SetAttackSpeed(Mathf.Max(0.01f, enemy.Stats.GetStat(StatType.AttackSpeed)));
+        enemy.Anim.PlayAttack();
     }
 
     // 攻击状态进入
     public void BeginAttack()
     {
+        attacking = true;
+        attackEnterTime = Time.time;
         struck = false;
         sector.SetFill(0f);
         sector.SetVisible(true);
@@ -54,6 +73,7 @@ public class EnemyAttack : MonoBehaviour
     {
         if (struck) return;
         struck = true;
+        lastWindup = Time.time - attackEnterTime;   // 实测前摇，下一次起手判断用
         sector.SetFill(1f);
         DetectHit();
         sector.SetFill(0f);
@@ -63,6 +83,7 @@ public class EnemyAttack : MonoBehaviour
     // 攻击被中断：状态退出 / 死亡 / 对象池回收，任何路径都必须走这里复位
     public void EndAttack()
     {
+        attacking = false;
         struck = false;
         sector.SetFill(0f);
         sector.SetVisible(false);
@@ -72,16 +93,19 @@ public class EnemyAttack : MonoBehaviour
     void DetectHit()
     {
         Vector3 origin = transform.position + Vector3.up;
+        float range = enemy.Stats.GetStat(StatType.AttackRange);
+        float halfAngle = enemy.Stats.GetStat(StatType.AttackAngle) * 0.5f;
+        float damage = enemy.Stats.GetStat(StatType.AttackDamage);
 
-        Collider[] hits = Physics.OverlapSphere(origin, attackRange, targetMask, QueryTriggerInteraction.Ignore);
+        Collider[] hits = Physics.OverlapSphere(origin, range, targetMask, QueryTriggerInteraction.Ignore);
         foreach (var other in hits)
         {
             Vector3 toTarget = other.bounds.center - origin;
             toTarget.y = 0f;
-            if (toTarget.sqrMagnitude > attackRange * attackRange) continue;
-            if (Vector3.Angle(transform.forward, toTarget) > attackAngle * 0.5f) continue;
+            if (toTarget.sqrMagnitude > range * range) continue;
+            if (Vector3.Angle(transform.forward, toTarget) > halfAngle) continue;
 
-            DamageCalculator.DealDamage(enemy.gameObject, other.gameObject, baseDamage, scaling: DamageScaling.Melee);
+            DamageCalculator.DealDamage(enemy.gameObject, other.gameObject, damage, scaling: DamageScaling.Melee);
         }
     }
 }

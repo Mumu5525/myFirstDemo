@@ -17,7 +17,6 @@ public class EnemyMove : MonoBehaviour
     {
         enemy.Agent.updatePosition = false;
         enemy.Agent.updateRotation = false;
-        enemy.Agent.speed = enemy.Stats != null ? enemy.Stats.GetStat(StatType.Speed) : enemy.Data.speed;
     }
     void FixedUpdate()
     {
@@ -37,7 +36,7 @@ public class EnemyMove : MonoBehaviour
         if(flatVelocity.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(flatVelocity);
-            enemy.Rb.MoveRotation(Quaternion.Slerp(enemy.Rb.rotation, targetRotation, enemy.Data.rotationSpeed * Time.fixedDeltaTime));
+            enemy.Rb.MoveRotation(Quaternion.Slerp(enemy.Rb.rotation, targetRotation, enemy.Stats.GetStat(StatType.RotationSpeed) * Time.fixedDeltaTime));
         }
     }
 
@@ -54,12 +53,14 @@ public class EnemyMove : MonoBehaviour
 
     void CalculateSpeed()
     {
+        enemy.Agent.speed = enemy.Stats.GetStat(StatType.Speed);
+
         enemy.Rb.velocity = new Vector3(0, enemy.Rb.velocity.y, 0);
         enemy.Rb.angularVelocity = Vector3.zero;
 
         Vector3 currentVelocity = enemy.Rb.velocity;
         Vector3 desireVelocity = enemy.Agent.desiredVelocity;
-        Vector3 flat = Vector3.MoveTowards(currentVelocity, desireVelocity, enemy.Data.smoothing);
+        Vector3 flat = Vector3.MoveTowards(currentVelocity, desireVelocity, enemy.Stats.GetStat(StatType.Smoothing));
         enemy.Rb.velocity = new Vector3(flat.x, enemy.Rb.velocity.y, flat.z);
 
         enemy.Agent.nextPosition = enemy.Rb.position;

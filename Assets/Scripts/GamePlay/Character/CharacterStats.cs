@@ -27,6 +27,9 @@ public class CharacterStats : MonoBehaviour
 
     float GetBaseValue(StatType stat)
     {
+        // 攻击相关字段在 EnemyData 上，玩家没有这些值
+        EnemyData enemyData = data as EnemyData;
+
         switch (stat)
         {
             case StatType.MeleeDamage:      return data.meleeDamage;
@@ -46,12 +49,23 @@ public class CharacterStats : MonoBehaviour
             case StatType.ExplosionRadius:  return data.explosionRadius;
             case StatType.ExplosionDamage:  return data.explosionDamage;
             case StatType.SpreadAngle:      return data.spreadAngle;
+            case StatType.Smoothing:        return data.smoothing;
+            case StatType.RotationSpeed:    return data.rotationSpeed;
+            case StatType.AttackRange:      return enemyData != null ? enemyData.attackRange : 0f;
+            case StatType.AttackAngle:      return enemyData != null ? enemyData.attackAngle : 0f;
+            case StatType.AttackDamage:     return enemyData != null ? enemyData.attackDamage : 0f;
             default:                        return 0f;
         }
     }
 
     /// <summary> 三合一：base + affix + buff </summary>
-    public float GetStat(StatType stat)
+    public float GetStat(StatType stat) => GetStat(stat, null);
+
+    /// <summary>
+    /// 三合一：base + affix + buff，额外叠加临时词条（用于未拥有的武器预览）。
+    /// extraAffixes 为 null 时行为与无参版本完全一致。
+    /// </summary>
+    public float GetStat(StatType stat, IEnumerable<Affix> extraAffixes)
     {
         // 防御性懒加载：Awake 顺序不确定时也能正常工作
         if (buffManager == null)
@@ -65,6 +79,12 @@ public class CharacterStats : MonoBehaviour
             buffManager.CollectModifiers(stat, modifierCache);
         if (affixManager != null)
             affixManager.CollectModifiers(stat, modifierCache);
+
+        if (extraAffixes != null)
+        {
+            foreach (var a in extraAffixes)
+                a.CollectModifiers(stat, modifierCache);
+        }
 
         float addSum = 0f, mulSum = 0f, divProduct = 1f;
         foreach (var m in modifierCache)

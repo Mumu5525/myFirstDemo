@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "SwitchWeaponScroll",
+                    "type": "Value",
+                    "id": "297825a3-17b7-4077-a3fc-92a3bd9880c0",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -150,6 +159,17 @@
                     "action": "SwitchWeaponNext",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8fcbfbeb-deb3-4358-944f-a34f8380bd97",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchWeaponScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -206,24 +226,6 @@
             "id": "e1fe50f7-bd9a-4170-b834-4673d1d437b4",
             "actions": [
                 {
-                    "name": "LeftClick",
-                    "type": "Button",
-                    "id": "9680a074-5b82-4c51-8bad-0c973898b75c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "RightClick",
-                    "type": "Button",
-                    "id": "69872c5a-bdde-4b83-942e-d404503f640d",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Refresh",
                     "type": "Button",
                     "id": "e4adeba3-ca31-4efe-8ab2-746b7f3959ba",
@@ -242,38 +244,16 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shift",
+                    "name": "Open/Close",
                     "type": "Button",
-                    "id": "1367c0b9-c204-4206-b939-0358004824bc",
-                    "expectedControlType": "",
+                    "id": "10f8e60f-074a-4c99-81af-613247a687b1",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "570c9714-637d-4349-9169-d9e0b9f6538a",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "LeftClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3c6809d5-bd07-4cb7-abeb-bfb0c61624f9",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "RightClick",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "750c79aa-1fcc-42d2-b0e4-df4a38fea973",
@@ -298,12 +278,12 @@
                 },
                 {
                     "name": "",
-                    "id": "2689b791-8405-4108-af97-849778d5b67c",
-                    "path": "<Keyboard>/shift",
+                    "id": "a0bd547c-7788-4240-943e-ebcaed3d34ca",
+                    "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Shift",
+                    "action": "Open/Close",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -314,37 +294,64 @@
             "id": "26af3b44-8a62-4325-af7e-68ac38d93a95",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Open/Close",
                     "type": "Button",
                     "id": "4cf014e7-6d86-4503-b6e2-0f7e7365917e",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "0f99a161-d792-43d5-8838-dc2d75193449",
-                    "path": "",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Open/Close",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
         },
         {
-            "name": "Map",
-            "id": "e141bb63-1b02-4aec-8f01-d6ed8fda0be7",
+            "name": "Basic",
+            "id": "dceec744-34a3-4c72-a8b6-56fdcacc513c",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Back",
                     "type": "Button",
-                    "id": "8cd5423f-2d3d-47db-a091-1935460bc129",
+                    "id": "7ca257db-442c-4e20-89e6-cff57548676c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RightClick",
+                    "type": "Button",
+                    "id": "c04bbd07-9171-4f32-985b-89f908125d64",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LeftClick",
+                    "type": "Button",
+                    "id": "f38bbaf6-aed9-46cf-8f9e-53430b16ce2b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Shift",
+                    "type": "Button",
+                    "id": "97397f3f-6e99-4551-8f15-e31495e56ec5",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -354,12 +361,45 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "a1497bbd-7522-43fa-882b-e18c09adff1c",
-                    "path": "",
+                    "id": "7720d79c-d75b-4924-9974-43b218742b84",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0d07744a-c8c4-4e5e-b33e-86d886101ab5",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22c81cc7-53f6-4b14-99f3-a845c82a8a18",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "caf46aff-3adb-438e-b796-7ccdf100bc5c",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

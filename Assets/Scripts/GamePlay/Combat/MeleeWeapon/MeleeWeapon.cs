@@ -29,6 +29,7 @@ public class MeleeWeapon : Weapon
         }
 
         foreach (var h in validHits)
-            DamageCalculator.DealDamage(shooter, h.gameObject, Data.damage, scaling: DamageScaling.Melee);
+            DamageCalculator.DealDamage(shooter, h.gameObject, Data.damage,
+                scaling: DamageScaling.Melee, extraCriticalChance: Data.criticalChance);
     }
 }

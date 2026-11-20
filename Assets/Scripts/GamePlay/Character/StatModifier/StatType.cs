@@ -21,5 +21,10 @@ public enum StatType
     ExplosionRadius,
     ExplosionDamage,
     RangedDamage,    // 远程伤害加成
-    SpreadAngle      //散射角加成(度), 负数 = 更精准
+    SpreadAngle,     //散射角加成(度), 负数 = 更精准
+    Smoothing,       //移动平滑量
+    RotationSpeed,   //转向速度
+    AttackRange,     //敌人攻击扇形半径
+    AttackAngle,     //敌人攻击扇形角度
+    AttackDamage     //敌人攻击基础伤害
 }
