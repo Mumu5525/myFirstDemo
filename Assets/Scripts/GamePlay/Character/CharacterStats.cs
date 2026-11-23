@@ -54,6 +54,7 @@ public class CharacterStats : MonoBehaviour
             case StatType.AttackRange:      return enemyData != null ? enemyData.attackRange : 0f;
             case StatType.AttackAngle:      return enemyData != null ? enemyData.attackAngle : 0f;
             case StatType.AttackDamage:     return enemyData != null ? enemyData.attackDamage : 0f;
+            case StatType.ReloadSpeed:      return 1f;
             default:                        return 0f;
         }
     }

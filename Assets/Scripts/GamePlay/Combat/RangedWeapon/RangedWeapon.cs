@@ -11,8 +11,9 @@ public class RangedWeapon : Weapon
     List<OnHitEffect> onHitCache;
     bool onHitBuilt;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         poolParent = new GameObject("projectiles").transform;
     }
 

@@ -109,6 +109,9 @@ public class PlayerInventory : MonoBehaviour
                     weapon.transform.localRotation = Quaternion.identity;
                 }
 
+                // 词条生效后重新补满，让初始弹药吃到弹容量加成
+                weapon.ResetAmmo();
+
                 if (CurrentWeapon == null)
                     CurrentIndex = i;
                 
@@ -149,6 +152,9 @@ public class PlayerInventory : MonoBehaviour
             newWeapon.transform.localPosition = Vector3.zero;
             newWeapon.transform.localRotation = Quaternion.identity;
         }
+
+        // 词条生效后重新补满，让初始弹药吃到弹容量加成
+        newWeapon.ResetAmmo();
 
         RefreshWeaponVisibility();
         OnWeaponsChanged?.Invoke();
@@ -224,6 +230,11 @@ public class PlayerInventory : MonoBehaviour
         foreach (var w in Weapons)
             if (w != null)
                 affixManager?.EquipWeapon(w.Affixes);
+
+        // 所有词条都注册完后再补满，保证每把武器都吃到全局弹容量加成
+        foreach (var w in Weapons)
+            if (w != null)
+                w.ResetAmmo();
 
         RefreshWeaponVisibility();
         OnWeaponsChanged?.Invoke();

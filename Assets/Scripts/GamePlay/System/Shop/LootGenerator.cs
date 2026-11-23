@@ -26,7 +26,7 @@ public static class LootGenerator
 
     /// <summary>
     /// 从武器池随机挑一把，随机品质，随机词条。
-    /// 词条数 = (int)rarity（品质越高词条越多）。
+    /// 词条数 = (int)rarity；rarity 同时是词条等级上限，最高档词条最多 1 条。
     /// </summary>
     public static GeneratedWeapon RollWeapon(LootTable table, int quality)
     {

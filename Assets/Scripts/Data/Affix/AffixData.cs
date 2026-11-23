@@ -23,10 +23,7 @@ public class AffixData : ScriptableObject
 
     [Header("命中效果（behavior = OnHit时生效）")]
     public OnHitEffect onHitEffect;
-    // ─── 描述 ───
-    [Header("显示")]
-    [TextArea(1, 3)]
-    public string description;
+
 }
 
 /// <summary>

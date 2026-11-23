@@ -17,9 +17,13 @@ public class PlayerAttack : MonoBehaviour
         anim = GetComponent<PlayerAnimator>();
     }
 
-    void Start() 
+    void OnEnable()
     {
         EventBus<OnWeaponAttack>.Subscribe(PlayFire);
+    }
+    void OnDisable() 
+    {
+        EventBus<OnWeaponAttack>.Unsubscribe(PlayFire);
     }
     void Update()
     {

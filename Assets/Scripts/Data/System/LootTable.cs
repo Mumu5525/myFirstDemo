@@ -45,7 +45,7 @@ public class LootTable : ScriptableObject
         foreach (var rw in rarityWeights)
         {
             if (rw.tier == tier)
-                return Mathf.Max(1f, rw.baseWeight + rw.perLevelBonus * (quality - 1));
+                return rw.baseWeight + rw.perLevelBonus * (quality - 1);
         }
         return 0f;
     }

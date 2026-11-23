@@ -26,5 +26,8 @@ public enum StatType
     RotationSpeed,   //转向速度
     AttackRange,     //敌人攻击扇形半径
     AttackAngle,     //敌人攻击扇形角度
-    AttackDamage     //敌人攻击基础伤害
+    AttackDamage,    //敌人攻击基础伤害
+    MagazineSize,    //弹匣容量加成（加法）
+    ReloadSpeed,     //换弹速度倍率（基础 1）
+    InfiniteAmmo     //>0 = 无限弹药
 }

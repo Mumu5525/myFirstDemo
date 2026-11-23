@@ -82,34 +82,73 @@ public class AffixPool : ScriptableObject
     }
 
     /// <summary>
-    /// 从任意 Tier 中抽 N 条，高 Tier 优先。返回已创建好的 Affix 列表。
-    /// minTier 限制最低品质。
+    /// 从不超过 maxTier 的 Tier 中抽 N 条，返回已创建好的 Affix 列表。
+    /// maxTier 是等级上限；最高档的词条最多出现 1 条，其余槽位从更低的 Tier 抽。
+    /// 每个槽位按 Tier 序号加权选档（Tier 越高越容易被选中），再在档内等概率。
     /// </summary>
-    public List<Affix> RollAndCreate(int count, AffixTier minTier = AffixTier.T1)
+    public List<Affix> RollAndCreate(int count, AffixTier maxTier = AffixTier.T6)
     {
         var result = new List<Affix>();
         var usedStats = new HashSet<StatType>();
+        bool maxTierUsed = false;
 
-        // 从高 Tier 往低 Tier 尝试，凑够 count
-        for (int t = (int)AffixTier.T6; t >= (int)minTier && result.Count < count; t--)
+        for (int i = 0; i < count; i++)
         {
-            var tier = (AffixTier)t;
-            if (!byTier.TryGetValue(tier, out var list) || list.Count == 0) continue;
-
-            var shuffled = new List<AffixData>(list);
-            Shuffle(shuffled);
-
-            foreach (var data in shuffled)
+            // 收集当前还有可用词条的 Tier（最高档出过一条后就排除）
+            var availableTiers = new List<AffixTier>();
+            for (int t = (int)maxTier; t >= (int)AffixTier.T1; t--)
             {
-                if (result.Count >= count) break;
-                if (data.behavior != AffixBehavior.Stat) continue;
-                if (usedStats.Contains(data.statType)) continue;
-
-                result.Add(CreateAffix(data));
-                usedStats.Add(data.statType);
+                var tier = (AffixTier)t;
+                if (tier == maxTier && maxTierUsed) continue;
+                if (GetUnusedCandidates(tier, usedStats).Count > 0)
+                    availableTiers.Add(tier);
             }
+
+            if (availableTiers.Count == 0) break;
+
+            AffixTier chosen = PickWeighted(availableTiers);
+            var candidates = GetUnusedCandidates(chosen, usedStats);
+            var data = candidates[Random.Range(0, candidates.Count)];
+
+            result.Add(CreateAffix(data));
+            usedStats.Add(data.statType);
+            if (chosen == maxTier) maxTierUsed = true;
         }
+
+        // 按品质从高到低排序，UI 直接按顺序展示
+        result.Sort((a, b) => ((int)b.Tier).CompareTo((int)a.Tier));
         return result;
+    }
+
+    /// <summary> 按 Tier 序号加权抽一个 Tier（T6 权重 6 … T1 权重 1）。 </summary>
+    static AffixTier PickWeighted(List<AffixTier> tiers)
+    {
+        float total = 0f;
+        foreach (var tier in tiers) total += (int)tier;
+
+        float roll = Random.Range(0f, total);
+        float cumulative = 0f;
+        foreach (var tier in tiers)
+        {
+            cumulative += (int)tier;
+            if (roll <= cumulative) return tier;
+        }
+        return tiers[tiers.Count - 1];
+    }
+
+    /// <summary> 某 Tier 里还没被用过 StatType 的候选词条。 </summary>
+    List<AffixData> GetUnusedCandidates(AffixTier tier, HashSet<StatType> usedStats)
+    {
+        var candidates = new List<AffixData>();
+        if (!byTier.TryGetValue(tier, out var list)) return candidates;
+
+        foreach (var data in list)
+        {
+            if (data.behavior != AffixBehavior.Stat) continue;
+            if (usedStats.Contains(data.statType)) continue;
+            candidates.Add(data);
+        }
+        return candidates;
     }
 
     // ─── 工具 ───

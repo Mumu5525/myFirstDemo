@@ -7,8 +7,15 @@ using UnityEngine;
 public enum AffixSource { Weapon, Relic }
 
 /// <summary>
-/// 词条抽象基类。
-/// 和 Buff 不同：Affix 在武器/遗物生成时就固定，没有生命周期，不随时间变化。
+/// 词条/效果抽象基类。武器词条和遗物效果都继承它。
+///
+/// 子类按需重写三个钩子：
+/// 1. CollectModifiers —— 数值型：把 StatModifier 交给 CharacterStats
+/// 2. OnEquip          —— 事件型：订阅 EventBus，或做一次性副作用
+/// 3. OnUnequip        —— 事件型：撤销 OnEquip 里做的所有事
+///
+/// 三个钩子都有默认空实现，纯数据型子类一个都不用重写。
+/// 和 Buff 的区别：Affix 跟随物品，没有持续时间，不会自己过期。
 /// </summary>
 public abstract class Affix
 {
@@ -24,19 +31,14 @@ public abstract class Affix
         Tier = tier;
     }
 
-    /// <summary>
-    /// 把自己产生的 StatModifier 交给调用方。
-    /// 纯属性词条重写这个就够了。
-    /// </summary>
-    public abstract void CollectModifiers(StatType stat, List<StatModifier> output);
+    /// <summary> 数值型词条重写：把自己产生的 StatModifier 交给调用方。 </summary>
+    public virtual void CollectModifiers(StatType stat, List<StatModifier> output) { }
 
-    // ---- 生命周期钩子，默认空实现（和 Buff 的 OnApply/OnRemove 对称） ----
+    /// <summary> 装备时触发。事件型词条在这里订阅 EventBus 或施加一次性效果。 </summary>
+    public virtual void OnEquip(AffixContext owner) { }
 
-    /// <summary> 装备时触发。子类重写来实现非数值效果（回血、加Buff等）。 </summary>
-    public virtual void OnEquip(GameObject owner) { }
-
-    /// <summary> 卸下时触发。子类重写来撤销效果（移除Buff等）。 </summary>
-    public virtual void OnUnequip(GameObject owner) { }
+    /// <summary> 卸下时触发。必须撤销 OnEquip 里做的所有事（退订、移除 Buff 等）。 </summary>
+    public virtual void OnUnequip(AffixContext owner) { }
 }
 
 /// <summary>

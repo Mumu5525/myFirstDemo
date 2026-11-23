@@ -14,8 +14,6 @@ public class ShopDetailPanelUI : MonoBehaviour
     [SerializeField] Image             detailIcon;
     [SerializeField] TextMeshProUGUI   nameText;
     [SerializeField] TextMeshProUGUI   typeText;        // 武器 / 遗物
-    // [SerializeField] TextMeshProUGUI   rarityText;      // 普通 / 稀有 / ...
-    [SerializeField] TextMeshProUGUI   descriptionText; // 遗物描述（不参与词条行）
     [SerializeField] RectTransform     statsRoot;       // 词条行容器（Vertical Layout Group）
     [SerializeField] ShopStatRowUI     statRowPrefab;   // 一行词条
     [SerializeField] TextMeshProUGUI   priceText;
@@ -62,13 +60,6 @@ public class ShopDetailPanelUI : MonoBehaviour
             detailIcon.enabled = icon != null;
         }
 
-        if (descriptionText != null)
-        {
-            string desc = item.kind == ItemEntry.Kind.Relic ? item.relicData?.description : null;
-            descriptionText.enabled = !string.IsNullOrEmpty(desc);
-            descriptionText.text = desc ?? "";
-        }
-
         ShowRows(BuildRows(item));
 
         if (priceText != null)
@@ -88,8 +79,6 @@ public class ShopDetailPanelUI : MonoBehaviour
         if (detailIcon != null) detailIcon.enabled = false;
         if (nameText != null)   { nameText.enabled = false;   nameText.text = ""; }
         if (typeText != null)   { typeText.enabled = false;   typeText.text = ""; }
-        // if (rarityText != null) { rarityText.enabled = false; rarityText.text = ""; }
-        if (descriptionText != null) { descriptionText.enabled = false; descriptionText.text = ""; }
         if (priceText != null)  { priceText.enabled = false;  priceText.text = ""; }
         if (emptyHint != null)  emptyHint.enabled = true;
 
@@ -100,7 +89,7 @@ public class ShopDetailPanelUI : MonoBehaviour
     //  词条行
     // ═══════════════════════════════════════════
 
-    void ShowRows(List<string> lines)
+    void ShowRows(List<(string text, AffixTier? tier)> lines)
     {
         if (statsRoot == null || statRowPrefab == null) return;
 
@@ -113,26 +102,26 @@ public class ShopDetailPanelUI : MonoBehaviour
         {
             bool show = i < count;
             rows[i].gameObject.SetActive(show);
-            if (show) rows[i].SetText(lines[i]);
+            if (show) rows[i].SetText(lines[i].text, lines[i].tier);
         }
     }
 
-    List<string> BuildRows(ItemEntry item)
+    List<(string text, AffixTier? tier)> BuildRows(ItemEntry item)
     {
-        var lines = new List<string>();
+        var lines = new List<(string text, AffixTier? tier)>();
 
         if (item.kind == ItemEntry.Kind.Weapon)
         {
             if (item.affixes == null || item.affixes.Count == 0)
-                lines.Add("无附加词条");
+                lines.Add(("无附加词条", null));
             else
                 foreach (var a in item.affixes)
-                    lines.Add($"• {a.Name}");
+                    lines.Add(($"• {a.Name}", a.Tier));
         }
         else if (item.effects != null)
         {
             foreach (var e in item.effects)
-                lines.Add($"• {FormatStat(e.statType, e.modifierType, e.value)}");
+                lines.Add(($"• {FormatStat(e.statType, e.modifierType, e.value)}", item.relicTier));
         }
 
         return lines;

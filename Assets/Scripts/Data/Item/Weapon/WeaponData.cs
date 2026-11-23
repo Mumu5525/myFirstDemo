@@ -20,6 +20,12 @@ public class WeaponData : ScriptableObject
     [Tooltip("商店基础价格")]
     public int basePrice = 100;
 
+    [Header("弹药")]
+    [Tooltip("弹匣容量，0 = 无限弹药（不换弹）")]
+    public int magazineSize = 0;
+    [Tooltip("空弹后自动装填耗时（秒）")]
+    public float reloadTime = 2f;
+
     [Header("远程(ranged)")]
     public TriggerMode triggerMode = TriggerMode.Automatic;
     public int pierceCount = 1;

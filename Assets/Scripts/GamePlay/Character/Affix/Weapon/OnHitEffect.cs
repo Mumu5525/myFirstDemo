@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 // OnHitAffix.cs
 public class OnHitAffix : Affix
 {
@@ -11,6 +8,4 @@ public class OnHitAffix : Affix
     {
         Effect = effect;
     }
-
-    public override void CollectModifiers(StatType stat, List<StatModifier> output) { }
 }

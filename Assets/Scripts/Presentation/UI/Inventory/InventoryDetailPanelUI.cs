@@ -14,8 +14,6 @@ public class InventoryDetailPanelUI : MonoBehaviour
     [Header("内容")]
     [SerializeField] Image detailIcon;
     [SerializeField] TextMeshProUGUI nameText;
-    [SerializeField] TextMeshProUGUI typeText;          // 可选，没有对应对象时留空
-    [SerializeField] TextMeshProUGUI descriptionText;   // 遗物描述
 
     [Header("基础属性区")]
     [SerializeField] RectTransform attributeRoot;       // Stats/Viewport/Content
@@ -84,8 +82,7 @@ public class InventoryDetailPanelUI : MonoBehaviour
     void ShowWeaponData(WeaponData data, List<Affix> affixes, AffixTier rarity,
                         WeaponStats stats, WeaponStats? compareTo)
     {
-        SetHeader(data.displayName, data.icon, ShopHUDTheme.RarityColor(rarity), "武器");
-        SetDescription(null);
+        SetHeader(data.displayName, data.icon, ShopHUDTheme.RarityColor(rarity));
 
         var lines = new List<AttributeLine>();
         foreach (var l in WeaponPreview.BuildLines(stats))
@@ -104,45 +101,38 @@ public class InventoryDetailPanelUI : MonoBehaviour
 
     void ShowRelicData(RelicData data)
     {
-        SetHeader(data.displayName, data.icon, ShopHUDTheme.RarityColor(data.tier), "遗物");
-        SetDescription(data.description);
-
-        var lines = new List<AttributeLine>();
-        foreach (var text in BuildRelicEffects(data))
-            lines.Add(new AttributeLine { text = text, key = null, value = 0f });
-
-        ShowAttributeRows(lines, null);
-        ShowAffixRows(null);
+        SetHeader(data.displayName, data.icon, ShopHUDTheme.RarityColor(data.tier));
+        ShowAffixRows(BuildRelicEffects(data));
     }
 
-    static List<string> BuildAffixRows(List<Affix> affixes)
+    static List<(string text, AffixTier? tier)> BuildAffixRows(List<Affix> affixes)
     {
-        var lines = new List<string>();
+        var lines = new List<(string text, AffixTier? tier)>();
 
         if (affixes == null || affixes.Count == 0)
         {
-            lines.Add("无附加词条");
+            lines.Add(("无附加词条", null));
             return lines;
         }
 
         foreach (var a in affixes)
-            lines.Add($"• {a.Name}");
+            lines.Add(($"• {a.Name}", a.Tier));
 
         return lines;
     }
 
-    static List<string> BuildRelicEffects(RelicData data)
+    static List<(string text, AffixTier? tier)> BuildRelicEffects(RelicData data)
     {
-        var lines = new List<string>();
+        var lines = new List<(string text, AffixTier? tier)>();
 
         if (data.effects == null || data.effects.Count == 0)
         {
-            lines.Add("无附加效果");
+            lines.Add(("无附加效果", null));
             return lines;
         }
 
         foreach (var e in data.effects)
-            lines.Add(FormatStat(e.statType, e.modifierType, e.value));
+            lines.Add((FormatStat(e.statType, e.modifierType, e.value), data.tier));
 
         return lines;
     }
@@ -168,26 +158,18 @@ public class InventoryDetailPanelUI : MonoBehaviour
     {
         if (detailIcon != null) detailIcon.enabled = false;
         if (nameText != null) { nameText.enabled = false; nameText.text = ""; }
-        if (typeText != null) { typeText.enabled = false; typeText.text = ""; }
-        if (descriptionText != null) { descriptionText.enabled = false; descriptionText.text = ""; }
 
         ShowAttributeRows(null, null);
         ShowAffixRows(null);
     }
 
-    void SetHeader(string displayName, Sprite icon, Color color, string type)
+    void SetHeader(string displayName, Sprite icon, Color color)
     {
         if (nameText != null)
         {
             nameText.enabled = true;
             nameText.text = displayName;
             nameText.color = color;
-        }
-
-        if (typeText != null)
-        {
-            typeText.enabled = true;
-            typeText.text = type;
         }
 
         if (detailIcon != null)
@@ -197,14 +179,6 @@ public class InventoryDetailPanelUI : MonoBehaviour
         }
     }
 
-    void SetDescription(string description)
-    {
-        if (descriptionText == null) return;
-
-        bool has = !string.IsNullOrEmpty(description);
-        descriptionText.enabled = has;
-        descriptionText.text = description ?? "";
-    }
 
     CharacterStats GetStats()
     {
@@ -279,7 +253,7 @@ public class InventoryDetailPanelUI : MonoBehaviour
         }
     }
 
-    void ShowAffixRows(List<string> lines)
+    void ShowAffixRows(List<(string text, AffixTier? tier)> lines)
     {
         if (statsRoot == null || statRowPrefab == null) return;
 
@@ -292,7 +266,7 @@ public class InventoryDetailPanelUI : MonoBehaviour
         {
             bool show = i < count;
             affixRows[i].gameObject.SetActive(show);
-            if (show) affixRows[i].SetText(lines[i]);
+            if (show) affixRows[i].SetText(lines[i].text, lines[i].tier);
         }
     }
 }

@@ -23,13 +23,4 @@ public class StatAffix : Affix
         if (stat == targetStat)
             output.Add(modifier);
     }
-
-    /// <summary> 装备时：无。 </summary>
-    public override void OnEquip(GameObject owner)
-    {
-        
-    }
-
-    /// <summary> 卸下时无需处理：Manager 已先刷新了 MaxHealth。 </summary>
-    public override void OnUnequip(GameObject owner) { }
 }

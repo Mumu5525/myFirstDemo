@@ -5,5 +5,5 @@ using UnityEngine;
 /// </summary>
 public class AffixContext
 {
-    public GameObject Owner;
+    public GameObject owner;
 }

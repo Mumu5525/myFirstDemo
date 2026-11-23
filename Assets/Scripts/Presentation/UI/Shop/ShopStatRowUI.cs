@@ -9,8 +9,13 @@ public class ShopStatRowUI : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI label;
 
-    public void SetText(string text)
+    /// <summary> tier 为空表示占位行（如“无附加词条”），用次要文字色。 </summary>
+    public void SetText(string text, AffixTier? tier)
     {
-        if (label != null) label.text = text;
+        if (label != null)
+        {
+            label.color = tier.HasValue ? ShopHUDTheme.RarityColor(tier.Value) : ShopHUDTheme.TextDim;
+            label.text = text;
+        }
     }
 }

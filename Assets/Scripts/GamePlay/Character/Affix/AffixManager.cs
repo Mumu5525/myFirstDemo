@@ -19,7 +19,7 @@ public class AffixManager : MonoBehaviour
         foreach (var a in newAffixes) a.Source = AffixSource.Weapon;
         activeAffixes.AddRange(newAffixes);
         OnAffixesChanged?.Invoke();                       // ① 先通知 → Health 同步 MaxHealth
-        foreach (var a in newAffixes) a.OnEquip(gameObject); // ② 再调钩子，此时 MaxHealth 已最新
+        foreach (var a in newAffixes) a.OnEquip(new AffixContext{owner = gameObject}); // ② 再调钩子，此时 MaxHealth 已最新
     }
 
     public void UnequipWeapon(List<Affix> affixes)
@@ -29,7 +29,7 @@ public class AffixManager : MonoBehaviour
             if (a.Source == AffixSource.Weapon)
                 activeAffixes.Remove(a);
         OnAffixesChanged?.Invoke();
-        foreach (var a in affixes) a.OnUnequip(gameObject);
+        foreach (var a in affixes) a.OnUnequip(new AffixContext{owner = gameObject});
     }
 
     public void EquipRelic(List<Affix> newAffixes)
@@ -38,7 +38,7 @@ public class AffixManager : MonoBehaviour
         foreach (var a in newAffixes) a.Source = AffixSource.Relic;
         activeAffixes.AddRange(newAffixes);
         OnAffixesChanged?.Invoke();
-        foreach (var a in newAffixes) a.OnEquip(gameObject);
+        foreach (var a in newAffixes) a.OnEquip(new AffixContext{owner = gameObject});
     }
 
     public void UnequipRelic(Affix affix)
@@ -47,7 +47,7 @@ public class AffixManager : MonoBehaviour
         if (affix.Source == AffixSource.Relic && activeAffixes.Remove(affix))
         {
             OnAffixesChanged?.Invoke();
-            affix.OnUnequip(gameObject);
+            affix.OnUnequip(new AffixContext{owner = gameObject});
         }
     }
 
